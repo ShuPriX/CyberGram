@@ -1,0 +1,62 @@
+{
+  "name": "cybergram",
+  "version": "0.1.0",
+  "private": true,
+  "description": "CyberGram — a professional network and career platform built exclusively for the cybersecurity community.",
+  "engines": {
+    "node": ">=20.12.0"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "node --conditions=react-server --import tsx --test \"tests/**/*.test.ts\"",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx --conditions=react-server scripts/migrate.ts",
+    "db:seed": "tsx --conditions=react-server scripts/seed.ts",
+    "db:seed:demo": "tsx --conditions=react-server scripts/seed.ts --demo",
+    "db:purge-demo": "tsx --conditions=react-server scripts/seed.ts --purge-demo",
+    "db:studio": "drizzle-kit studio",
+    "cron:daily": "tsx --conditions=react-server scripts/cron.ts daily",
+    "jobs:sync": "tsx --conditions=react-server scripts/cron.ts sync"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "^0.5.16",
+    "@next/env": "16.4.5",
+    "@node-rs/argon2": "^2.2.2",
+    "aws4fetch": "^1.0.20",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "drizzle-orm": "^0.45.4",
+    "geist": "^1.9.2",
+    "ioredis": "^6.0.0",
+    "lucide-react": "^1.70.0",
+    "next": "16.4.5",
+    "nodemailer": "^10.4.0",
+    "pg": "^8.23.1",
+    "radix-ui": "^1.8.1",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
+    "server-only": "^0.0.1",
+    "sharp": "^0.35.5",
+    "tailwind-merge": "^3.7.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.5",
+    "@types/node": "^24.19.2",
+    "@types/pg": "^8.23.1",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "drizzle-kit": "^0.31.11",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "16.4.5",
+    "tailwindcss": "^4.3.5",
+    "tsx": "^4.23.15",
+    "typescript": "~5.9.3"
+  }
+}
