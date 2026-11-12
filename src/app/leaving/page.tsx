@@ -20,11 +20,11 @@ export default async function LeavingPage({ searchParams }: { searchParams: Prom
 
   return (
     <div className="flex min-h-dvh flex-col">
-      <header className="mx-auto flex h-14 w-full max-w-[1240px] items-center px-4">
+      <header className="mx-auto flex h-14 w-full max-w-[1760px] items-center px-4 sm:px-6 xl:px-10">
         <Logo />
       </header>
       <main id="main" className="flex flex-1 items-start justify-center px-4 py-10 sm:items-center">
-        <div className="w-full max-w-lg rounded-xl border bg-card p-6 shadow-card sm:p-8">
+        <div className="w-full max-w-lg rounded-xl border bg-card p-6 sm:p-8">
           {!assessment ? (
             <>
               <h1 className="text-lg font-semibold">This link cannot be opened</h1>
@@ -37,7 +37,7 @@ export default async function LeavingPage({ searchParams }: { searchParams: Prom
             <>
               <div
                 className={cn(
-                  "flex size-11 items-center justify-center rounded-full",
+                  "flex size-11 items-center justify-center rounded-sm",
                   assessment.level === "danger" ? "bg-destructive-soft text-destructive" : assessment.level === "caution" ? "bg-warning-soft text-warning" : "bg-primary-soft text-primary",
                 )}
               >

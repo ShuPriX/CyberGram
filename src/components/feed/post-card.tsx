@@ -323,7 +323,7 @@ export function PostCard({
     "inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-md text-[13px] font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground";
 
   return (
-    <article className="rounded-xl border bg-card shadow-card">
+    <article className="rounded-xl border bg-card">
       {plainRepost ? (
         <p className="flex items-center gap-1.5 border-b px-4 py-2 text-xs text-muted-foreground sm:px-5">
           <Repeat2 className="size-3.5" aria-hidden="true" />

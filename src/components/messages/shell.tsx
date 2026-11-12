@@ -46,7 +46,7 @@ export function MessagesShell({
                     </span>
                     <span className={cn("block truncate text-xs", conversation.unread ? "text-foreground" : "text-muted-foreground")}>{conversation.preview ?? "No messages yet"}</span>
                   </span>
-                  {conversation.unread ? <span className="size-2 shrink-0 rounded-full bg-primary" aria-label="Unread" /> : null}
+                  {conversation.unread ? <span className="size-2 shrink-0 rounded-sm bg-primary" aria-label="Unread" /> : null}
                 </Link>
               </li>
             ))}

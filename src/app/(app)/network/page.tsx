@@ -41,7 +41,7 @@ export default async function NetworkPage({ searchParams }: { searchParams: Prom
   const followingIds = new Set(following.map((p) => p.id));
 
   return (
-    <div className="mx-auto max-w-3xl space-y-5">
+    <div className="mx-auto w-full max-w-6xl space-y-5">
       <PageHeader title="My network" description="Connections are mutual and request-based. Following is one-way and needs no approval." />
       <LinkTabs
         current={tab}

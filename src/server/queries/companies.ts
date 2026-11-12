@@ -103,7 +103,7 @@ export async function getCompanyTeam(companyId: string): Promise<CompanyTeamMemb
       userId: users.id,
       username: users.username,
       name: users.name,
-      headline: profiles.headline,
+      headline: sql<string | null>`case when ${profiles.visibility} = 'public' then ${profiles.headline} end`,
       avatarFileId: profiles.avatarFileId,
       role: companyMembers.role,
       title: companyMembers.title,

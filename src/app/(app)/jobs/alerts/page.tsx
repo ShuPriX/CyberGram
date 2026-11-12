@@ -25,7 +25,7 @@ export default async function JobAlertsPage({ searchParams }: { searchParams: Pr
   const presetName = [preset.q, preset.remote ? "Remote" : null, countryName(preset.country), ...(preset.categories ?? []).map((c) => JOB_CATEGORY_LABELS[c as JobCategorySlug])].filter(Boolean).join(" · ");
 
   return (
-    <div className="mx-auto max-w-3xl space-y-5">
+    <div className="mx-auto w-full max-w-6xl space-y-5">
       <PageHeader title="Job alerts" description="Save a search and we will notify you when new matching roles are published. Alerts only ever contain roles that are open." />
       <JobsNav current="alerts" signedIn />
 

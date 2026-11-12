@@ -13,7 +13,12 @@ import { getCategoryNames } from "@/server/queries/taxonomy";
 type Props = { params: Promise<{ tag: string }> };
 
 const cleanTag = (raw: string) => {
-  const tag = decodeURIComponent(raw).toLowerCase();
+  let tag: string;
+  try {
+    tag = decodeURIComponent(raw).toLowerCase();
+  } catch {
+    return null; // malformed percent-escape
+  }
   return /^[\p{L}\p{N}_]{2,50}$/u.test(tag) ? tag : null;
 };
 

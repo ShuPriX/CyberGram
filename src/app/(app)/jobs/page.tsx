@@ -54,7 +54,7 @@ export default async function JobsPage({ searchParams }: Props) {
       />
       <nav aria-label="Popular searches" className="flex flex-wrap gap-1.5">
         {JOB_LANDINGS.filter((l) => l.featured).map((landing) => (
-          <Link key={landing.slug} href={`/cybersecurity-jobs/${landing.slug}`} className="rounded-full border bg-card px-3 py-1 text-[13px] text-muted-foreground transition-colors hover:border-border-strong hover:text-foreground">
+          <Link key={landing.slug} href={`/cybersecurity-jobs/${landing.slug}`} className="rounded-sm border bg-card px-3 py-1 text-[13px] text-muted-foreground transition-colors hover:border-border-strong hover:text-foreground">
             {landing.short}
           </Link>
         ))}

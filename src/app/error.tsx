@@ -14,7 +14,7 @@ export default function ErrorPage({ error, reset }: { error: Error & { digest?: 
 
   return (
     <main id="main" className="flex min-h-dvh flex-col items-center justify-center px-4 text-center">
-      <div className="flex size-12 items-center justify-center rounded-full border bg-destructive-soft text-destructive">
+      <div className="flex size-12 items-center justify-center rounded-sm border bg-destructive-soft text-destructive">
         <TriangleAlert className="size-5" aria-hidden="true" />
       </div>
       <h1 className="mt-5 text-2xl font-semibold tracking-tight">Something went wrong</h1>

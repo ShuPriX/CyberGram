@@ -49,7 +49,7 @@ export default async function AdminAuditPage({ searchParams }: { searchParams: P
   return (
     <>
       <PageHeader title="Audit log" description="An append-only record of sign-ins, security changes, moderation decisions and administrative actions. Entries cannot be edited or deleted from the application." />
-      <form action="/admin/audit" method="get" className="flex flex-wrap gap-3 rounded-xl border bg-card p-4 shadow-card">
+      <form action="/admin/audit" method="get" className="flex flex-wrap gap-3 rounded-xl border bg-card p-4">
         <Input name="action" defaultValue={action ?? ""} maxLength={60} placeholder="Action contains… e.g. auth. or admin.job" aria-label="Action" className="min-w-52 flex-1" />
         <Input name="actor" defaultValue={actor ?? ""} maxLength={30} placeholder="Actor handle" aria-label="Actor handle" className="w-48" />
         <Button type="submit">Filter</Button>

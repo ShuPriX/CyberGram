@@ -9,7 +9,7 @@ import type { CompanyCard } from "@/server/queries/companies";
 export function CompanyCardView({ company }: { company: CompanyCard }) {
   const place = company.hqLocation ?? countryName(company.hqCountry);
   return (
-    <article className="group relative flex h-full flex-col rounded-xl border bg-card p-4 shadow-card transition-colors hover:border-border-strong">
+    <article className="group relative flex h-full flex-col rounded-xl border bg-card p-4 transition-colors hover:border-border-strong">
       <div className="flex items-start gap-3">
         <Avatar name={company.name} fileId={company.logoFileId} shape="square" />
         <div className="min-w-0 flex-1">

@@ -4,7 +4,7 @@ import { and, eq, inArray, ne } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { db } from "@/db";
-import { achievements, categories, comments, companies, contactMessages, events, jobSources, jobs, messages, posts, reports, resources, users } from "@/db/schema";
+import { achievements, categories, comments, companies, companyMembers, contactMessages, events, jobSources, jobs, messages, posts, reports, resources, users } from "@/db/schema";
 import { assignableRoles, outranks } from "@/lib/auth/permissions";
 import { revokeUserSessions } from "@/lib/auth/session";
 import { invalidate } from "@/lib/cache";
@@ -17,6 +17,31 @@ import { callAction, fail, formAction, isUniqueViolation, ok } from "@/server/ac
 import { DEFAULT_LISTING_LIFETIME_MS, syncSource } from "@/server/services/job-sync";
 import { notify } from "@/server/services/notify";
 import { runScheduledWork } from "@/server/services/scheduled-work";
+
+// ── Separation of duties ─────────────────────────────────────────────────────
+
+async function isCompanyMember(userId: string, companyId: string): Promise<boolean> {
+  const [row] = await db
+    .select({ userId: companyMembers.userId })
+    .from(companyMembers)
+    .where(and(eq(companyMembers.userId, userId), eq(companyMembers.companyId, companyId)))
+    .limit(1);
+  return Boolean(row);
+}
+
+/** True when a report is about the moderator themselves, their content or their organisation. */
+async function isOwnMaterial(userId: string, targetType: string, targetId: string): Promise<boolean> {
+  if (targetType === "user") return targetId === userId;
+  if (targetType === "company") return isCompanyMember(userId, targetId);
+  if (targetType === "post") return Boolean((await db.select({ id: posts.id }).from(posts).where(and(eq(posts.id, targetId), eq(posts.authorId, userId))).limit(1))[0]);
+  if (targetType === "comment") return Boolean((await db.select({ id: comments.id }).from(comments).where(and(eq(comments.id, targetId), eq(comments.authorId, userId))).limit(1))[0]);
+  if (targetType === "message") return Boolean((await db.select({ id: messages.id }).from(messages).where(and(eq(messages.id, targetId), eq(messages.senderId, userId))).limit(1))[0]);
+  if (targetType === "job") {
+    const [job] = await db.select({ postedById: jobs.postedById, companyId: jobs.companyId }).from(jobs).where(eq(jobs.id, targetId)).limit(1);
+    return Boolean(job && (job.postedById === userId || (job.companyId && (await isCompanyMember(userId, job.companyId)))));
+  }
+  return false;
+}
 
 // ── Reports & content ────────────────────────────────────────────────────────
 
@@ -34,6 +59,7 @@ export const resolveReportAction = formAction({ schema: resolveSchema, capabilit
   const [report] = await db.select().from(reports).where(and(eq(reports.id, input.id), eq(reports.status, "open"))).limit(1);
   if (!report) return fail("That report has already been handled.");
   const { targetType, targetId } = report;
+  if (await isOwnMaterial(user.id, targetType, targetId)) return fail("This report concerns you or your own content. Another moderator must handle it.");
 
   if (input.outcome === "remove") {
     if (targetType === "post") {
@@ -113,6 +139,7 @@ const decisionSchema = z.object({ id: zId, decision: zOneOf(["verify", "reject",
 export const reviewCompanyVerificationAction = formAction({ schema: decisionSchema, capability: "verify:companies" }, async (input, { user }) => {
   const [company] = await db.select().from(companies).where(eq(companies.id, input.id)).limit(1);
   if (!company) return fail("That organisation could not be found.");
+  if (await isCompanyMember(user.id, company.id)) return fail("You belong to this organisation. Another administrator must review it.");
   if (input.decision !== "verify" && !input.note) return fail("Explain the decision so the organisation knows what to fix.", { note: "Required." });
   const verified = input.decision === "verify";
   await db
@@ -193,6 +220,9 @@ const jobReviewSchema = z.object({ id: zId, decision: zOneOf(["approve", "reject
 export const reviewJobAction = formAction({ schema: jobReviewSchema, capability: "moderate:jobs" }, async (input, { user }) => {
   const [job] = await db.select().from(jobs).where(eq(jobs.id, input.id)).limit(1);
   if (!job) return fail("That listing could not be found.");
+  if (job.postedById === user.id || (job.companyId && (await isCompanyMember(user.id, job.companyId)))) {
+    return fail("You posted this listing or belong to its organisation. Another moderator must review it.");
+  }
   if (input.decision === "reject" && !input.note) return fail("Give a reason for rejecting the listing.", { note: "Required." });
   const now = new Date();
   if (input.decision === "approve") {

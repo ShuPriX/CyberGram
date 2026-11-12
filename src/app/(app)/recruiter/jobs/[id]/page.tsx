@@ -49,7 +49,7 @@ export default async function ManageJobPage({ params, searchParams }: { params: 
   const closed = ["closed", "filled", "expired"].includes(job.status);
 
   return (
-    <div className="mx-auto max-w-4xl space-y-5">
+    <div className="mx-auto w-full max-w-7xl space-y-5">
       <nav aria-label="Breadcrumb" className="flex items-center gap-1 text-xs text-muted-foreground">
         <Link href="/recruiter" className="hover:text-foreground">Recruiter portal</Link>
         <ChevronRight className="size-3" aria-hidden="true" />

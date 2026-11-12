@@ -13,6 +13,7 @@ import { EmptyState, LinkTabs, PageHeader, TimeAgo } from "@/components/ui/misc"
 import { db } from "@/db";
 import { companies, users } from "@/db/schema";
 import { requireCapability } from "@/lib/auth/session";
+import { leavingHref } from "@/lib/security/link-safety";
 import { COMPANY_TYPE_LABELS } from "@/lib/constants";
 import { privateMetadata } from "@/lib/seo";
 import { reviewCompanyVerificationAction, setCompanyStatusAction } from "@/server/actions/admin";
@@ -100,7 +101,7 @@ export default async function AdminCompaniesPage({ searchParams }: { searchParam
               {company.website ? (
                 <p className="text-[13px]">
                   <span className="text-muted-foreground">Website: </span>
-                  <a href={company.website} className="font-medium text-primary hover:underline" {...EXTERNAL_LINK_PROPS}>{company.website}</a>
+                  <a href={leavingHref(company.website)} className="font-medium text-primary hover:underline" {...EXTERNAL_LINK_PROPS}>{company.website}</a>
                 </p>
               ) : (
                 <p className="text-[13px] text-warning">No website on the page.</p>

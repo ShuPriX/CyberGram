@@ -16,7 +16,7 @@ export default async function SavedJobsPage() {
   const user = await requireUser();
   const jobs = await listSavedJobs(user.id);
   return (
-    <div className="mx-auto max-w-3xl space-y-5">
+    <div className="mx-auto w-full max-w-6xl space-y-5">
       <PageHeader title="Saved jobs" description="Roles you bookmarked. Listings that have since closed are removed from search but stay here so you can see what happened." />
       <JobsNav current="saved" signedIn />
       {jobs.length === 0 ? (

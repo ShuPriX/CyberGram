@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, ne } from "drizzle-orm";
 import { NextResponse, type NextRequest } from "next/server";
 import { db } from "@/db";
 import { companyMembers, files, jobApplications, jobs } from "@/db/schema";
@@ -10,14 +10,17 @@ export const runtime = "nodejs";
 
 const INLINE_TYPES = new Set(["image/webp", "image/png", "image/jpeg", "image/gif", "video/mp4", "video/webm"]);
 
-/** A recruiter may read a résumé only if it was submitted to a job at a company they belong to. */
+/**
+ * A recruiter may read a résumé only if it was submitted to a job at a company they belong to,
+ * and only while that application stands: withdrawing it revokes access.
+ */
 async function recruiterMayRead(fileId: string, userId: string): Promise<boolean> {
   const [row] = await db
     .select({ id: jobApplications.id })
     .from(jobApplications)
     .innerJoin(jobs, eq(jobs.id, jobApplications.jobId))
     .innerJoin(companyMembers, and(eq(companyMembers.companyId, jobs.companyId), eq(companyMembers.userId, userId)))
-    .where(eq(jobApplications.resumeFileId, fileId))
+    .where(and(eq(jobApplications.resumeFileId, fileId), ne(jobApplications.status, "withdrawn")))
     .limit(1);
   return Boolean(row);
 }

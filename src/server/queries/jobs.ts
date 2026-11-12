@@ -1,6 +1,7 @@
 import "server-only";
 import { and, arrayOverlaps, count, desc, eq, gt, gte, ilike, inArray, isNull, ne, or, sql, type SQL } from "drizzle-orm";
 import { db } from "@/db";
+import { memo } from "@/lib/cache";
 import { companies, jobApplications, jobs, savedJobs } from "@/db/schema";
 import {
   EARLY_CAREER_LEVELS,
@@ -234,7 +235,8 @@ export async function listJobs(filters: JobFilters = {}): Promise<JobList> {
 /** Jobs by their ids, preserving the given order. Used for saved lists and alerts. */
 export async function listJobsByIds(ids: string[], viewerId?: string | null): Promise<JobListItem[]> {
   if (ids.length === 0) return [];
-  const rows = await listQuery().where(inArray(jobs.id, ids));
+  // Unpublished listings (drafts, in review, rejected) are never returned through this path.
+  const rows = await listQuery().where(and(inArray(jobs.id, ids), inArray(jobs.status, ["active", "closed", "filled", "expired"])));
   const decorated = await decorateJobs(rows, viewerId);
   const byId = new Map(decorated.map((j) => [j.id, j]));
   return ids.map((id) => byId.get(id)).filter((j): j is JobListItem => Boolean(j));
@@ -297,7 +299,12 @@ export async function getViewerJobState(jobId: string, userId: string) {
 }
 
 /** Counts of open roles per facet value, for filter sidebars and landing pages. */
-export async function getJobFacetCounts() {
+export function getJobFacetCounts() {
+  // Public, identical for everyone and shown on busy pages: cached briefly so it cannot be used to load the database.
+  return memo("jobs:facets", 60_000, computeJobFacetCounts);
+}
+
+async function computeJobFacetCounts() {
   const open = openJobCondition();
   const [byCategory, byLevel, byCountry, [remote], [total], [early]] = await Promise.all([
     db.select({ key: jobs.category, value: count() }).from(jobs).where(open).groupBy(jobs.category),

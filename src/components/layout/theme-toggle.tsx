@@ -16,9 +16,9 @@ function applyTheme(theme: Theme) {
 function readTheme(): Theme {
   try {
     const stored = localStorage.getItem(THEME_STORAGE_KEY);
-    return stored === "light" || stored === "dark" ? stored : "system";
+    return stored === "light" || stored === "dark" || stored === "system" ? stored : "dark";
   } catch {
-    return "system";
+    return "dark";
   }
 }
 
@@ -32,13 +32,13 @@ function subscribe(onChange: () => void) {
 }
 
 const OPTIONS: { value: Theme; label: string; icon: typeof Sun }[] = [
-  { value: "light", label: "Light", icon: Sun },
-  { value: "dark", label: "Dark", icon: Moon },
+  { value: "light", label: "Diamond white", icon: Sun },
+  { value: "dark", label: "Black", icon: Moon },
   { value: "system", label: "System", icon: Monitor },
 ];
 
 export function ThemeToggle({ className }: { className?: string }) {
-  const theme = useSyncExternalStore<Theme>(subscribe, readTheme, () => "system");
+  const theme = useSyncExternalStore<Theme>(subscribe, readTheme, () => "dark");
 
   // Keep the document in sync when the preference changes in another tab, and follow the
   // operating system while the preference is "system".

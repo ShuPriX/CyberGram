@@ -57,7 +57,7 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
   return (
     <>
       <PageHeader title="Members" description="Search accounts, suspend or reactivate them, and — for super admins — assign staff roles. Every change is recorded in the audit log." />
-      <form action="/admin/users" method="get" className="grid gap-3 rounded-xl border bg-card p-4 shadow-card sm:grid-cols-[1.6fr_1fr_1fr_auto]">
+      <form action="/admin/users" method="get" className="grid gap-3 rounded-xl border bg-card p-4 sm:grid-cols-[1.6fr_1fr_1fr_auto]">
         <Input name="q" type="search" defaultValue={q ?? ""} maxLength={80} placeholder="Name, handle or email" aria-label="Search members" />
         <Select name="role" defaultValue={role ?? ""} aria-label="Role">
           <option value="">Any role</option>

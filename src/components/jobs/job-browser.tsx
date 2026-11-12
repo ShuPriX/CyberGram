@@ -132,9 +132,9 @@ export async function JobBrowser({
   );
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
+    <div className="grid gap-6 lg:grid-cols-[320px_minmax(0,1fr)]">
       <aside>
-        <details className="group rounded-xl border bg-card shadow-card lg:hidden">
+        <details className="group rounded-xl border bg-card lg:hidden">
           <summary className="flex items-center gap-2 px-4 py-3 text-[13px] font-medium">
             <SlidersHorizontal className="size-4" aria-hidden="true" /> Filters{activeCount > 0 ? ` (${activeCount})` : ""}
           </summary>

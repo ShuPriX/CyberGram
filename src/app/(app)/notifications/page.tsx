@@ -61,7 +61,7 @@ export default async function NotificationsPage({ searchParams }: { searchParams
   const base = unreadOnly ? "/notifications?filter=unread" : "/notifications";
 
   return (
-    <div className="mx-auto max-w-2xl space-y-5">
+    <div className="mx-auto w-full max-w-5xl space-y-5">
       <PageHeader
         title="Notifications"
         action={
@@ -96,12 +96,12 @@ export default async function NotificationsPage({ searchParams }: { searchParams
                     {item.actor ? (
                       <Avatar name={item.actor.name} fileId={item.actor.avatarFileId} />
                     ) : (
-                      <span className="flex size-10 items-center justify-center rounded-full border bg-muted text-muted-foreground">
+                      <span className="flex size-10 items-center justify-center rounded-sm border bg-muted text-muted-foreground">
                         <Icon className="size-[18px]" aria-hidden="true" />
                       </span>
                     )}
                     {item.actor ? (
-                      <span className="absolute -bottom-1 -right-1 flex size-5 items-center justify-center rounded-full border bg-card text-primary">
+                      <span className="absolute -bottom-1 -right-1 flex size-5 items-center justify-center rounded-sm border bg-card text-primary">
                         <Icon className="size-3" aria-hidden="true" />
                       </span>
                     ) : null}

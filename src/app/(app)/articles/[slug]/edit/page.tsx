@@ -24,7 +24,7 @@ export default async function EditArticlePage({ params }: { params: Promise<{ sl
   const categories = await getActiveCategories();
 
   return (
-    <div className="mx-auto max-w-3xl space-y-5">
+    <div className="mx-auto w-full max-w-6xl space-y-5">
       <PageHeader title="Edit article" />
       <Card>
         <CardContent>

@@ -56,7 +56,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
         maxLength={100}
         placeholder="Search people, posts, jobs and companies"
         aria-label="Search"
-        className="h-11 w-full rounded-lg border border-input bg-card pl-10 pr-4 text-[15px] shadow-card placeholder:text-subtle focus-visible:border-ring focus-visible:outline-none"
+        className="h-11 w-full rounded-lg border border-input bg-card pl-10 pr-4 text-[15px] placeholder:text-subtle focus-visible:border-ring focus-visible:outline-none"
       />
       {tab !== "all" ? <input type="hidden" name="tab" value={tab} /> : null}
     </form>
@@ -64,7 +64,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
 
   if (q.length < 2) {
     return (
-      <div className="mx-auto max-w-3xl space-y-5">
+      <div className="mx-auto w-full max-w-6xl space-y-5">
         <h1 className="text-xl font-semibold tracking-tight">Search</h1>
         {searchBox}
         <Card>
@@ -77,7 +77,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
   const limit = await rateLimit("search", user?.id ?? (await getRequestMeta()).ip);
   if (!limit.ok) {
     return (
-      <div className="mx-auto max-w-3xl space-y-5">
+      <div className="mx-auto w-full max-w-6xl space-y-5">
         <h1 className="text-xl font-semibold tracking-tight">Search</h1>
         {searchBox}
         <Card>
@@ -89,7 +89,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
 
   const wide = tab !== "all";
   const [people, posts, jobs, companies, categories] = await Promise.all([
-    tab === "all" || tab === "people" ? searchPeople(q, wide ? 40 : 4) : [],
+    tab === "all" || tab === "people" ? searchPeople(q, wide ? 40 : 4, { signedIn: Boolean(user) }) : [],
     tab === "all" || tab === "posts" ? getFeed({ viewer, q, limit: wide ? 12 : 3 }) : null,
     tab === "all" || tab === "jobs" ? listJobs({ q, sort: "relevance", pageSize: wide ? 30 : 4, viewerId: user?.id }) : null,
     tab === "all" || tab === "companies" ? searchCompanies(q, wide ? 30 : 4) : [],
@@ -99,7 +99,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
   const context = { viewer: user ? { name: user.name, avatarFileId: user.avatarFileId } : null, categories };
 
   return (
-    <div className="mx-auto max-w-3xl space-y-5">
+    <div className="mx-auto w-full max-w-6xl space-y-5">
       <h1 className="text-xl font-semibold tracking-tight">Results for “{q}”</h1>
       {searchBox}
       <LinkTabs current={tab} items={TABS.map((t) => ({ value: t, label: t[0]!.toUpperCase() + t.slice(1), href: href(t) }))} />

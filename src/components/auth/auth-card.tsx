@@ -13,7 +13,7 @@ export function AuthCard({
 }) {
   return (
     <>
-      <div className="rounded-xl border bg-card p-6 shadow-card sm:p-7">
+      <div className="rounded-xl border bg-card p-6 sm:p-7">
         <h1 className="text-xl font-semibold tracking-tight">{title}</h1>
         {description ? <p className="mt-1.5 text-[13px] leading-relaxed text-muted-foreground">{description}</p> : null}
         <div className="mt-6">{children}</div>

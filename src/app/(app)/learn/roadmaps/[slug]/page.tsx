@@ -43,7 +43,7 @@ export default async function RoadmapPage({ params }: Props) {
   const path = `/learn/roadmaps/${roadmap.slug}`;
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6">
+    <div className="mx-auto w-full max-w-6xl space-y-6">
       <JsonLd data={breadcrumbLd([{ name: "Home", path: "/" }, { name: "Learn", path: "/learn" }, { name: roadmap.title, path }])} />
       <nav aria-label="Breadcrumb" className="flex items-center gap-1 text-xs text-muted-foreground">
         <Link href="/learn" className="hover:text-foreground">Learn</Link>
@@ -58,8 +58,8 @@ export default async function RoadmapPage({ params }: Props) {
             <span>Your progress</span>
             <span>{done.size} of {roadmap.steps.length} stages</span>
           </div>
-          <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-secondary" role="progressbar" aria-valuenow={done.size} aria-valuemin={0} aria-valuemax={roadmap.steps.length} aria-label="Roadmap progress">
-            <div className="h-full rounded-full bg-primary transition-[width]" style={{ width: `${(done.size / Math.max(roadmap.steps.length, 1)) * 100}%` }} />
+          <div className="mt-1.5 h-2 overflow-hidden rounded-sm bg-secondary" role="progressbar" aria-valuenow={done.size} aria-valuemin={0} aria-valuemax={roadmap.steps.length} aria-label="Roadmap progress">
+            <div className="h-full rounded-sm bg-primary transition-[width]" style={{ width: `${(done.size / Math.max(roadmap.steps.length, 1)) * 100}%` }} />
           </div>
         </div>
       ) : (
@@ -77,7 +77,7 @@ export default async function RoadmapPage({ params }: Props) {
                 <CardContent className="flex gap-4">
                   <span
                     className={cn(
-                      "flex size-8 shrink-0 items-center justify-center rounded-full border text-[13px] font-semibold",
+                      "flex size-8 shrink-0 items-center justify-center rounded-sm border text-[13px] font-semibold",
                       complete ? "border-primary bg-primary text-primary-foreground" : "bg-muted text-muted-foreground",
                     )}
                     aria-hidden="true"

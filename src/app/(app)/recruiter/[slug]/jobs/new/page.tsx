@@ -14,7 +14,7 @@ export default async function NewJobPage({ params }: { params: Promise<{ slug: s
   if (access.company.status !== "active") redirect(`/recruiter/${access.company.slug}`);
   const { company } = access;
   return (
-    <div className="mx-auto max-w-3xl space-y-5">
+    <div className="mx-auto w-full max-w-6xl space-y-5">
       <PageHeader title={`Post a job at ${company.name}`} description="Listings stay open for 60 days or until the deadline, whichever comes first, and can be closed at any time." />
       <CompanyJobForm company={{ id: company.id, name: company.name, verified: company.verificationStatus === "verified" }} />
     </div>

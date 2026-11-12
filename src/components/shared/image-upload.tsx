@@ -51,7 +51,7 @@ export function ImageUpload({
         <div
           className={cn(
             "flex shrink-0 items-center justify-center overflow-hidden border bg-muted text-muted-foreground",
-            shape === "circle" && "size-20 rounded-full",
+            shape === "circle" && "size-20 rounded-sm",
             shape === "square" && "size-20 rounded-lg",
             shape === "wide" && "aspect-[4/1] w-full rounded-lg",
           )}

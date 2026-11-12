@@ -11,6 +11,7 @@ import { EmptyState, PageHeader, TimeAgo } from "@/components/ui/misc";
 import { db } from "@/db";
 import { achievements, users } from "@/db/schema";
 import { requireCapability } from "@/lib/auth/session";
+import { leavingHref } from "@/lib/security/link-safety";
 import { ACHIEVEMENT_TYPE_META } from "@/lib/constants";
 import { privateMetadata } from "@/lib/seo";
 import { displayHost, formatDate } from "@/lib/utils";
@@ -67,7 +68,7 @@ export default async function AdminAchievementsPage() {
                 {achievement.description ? <p className="whitespace-pre-line text-[13px] leading-relaxed text-muted-foreground">{achievement.description}</p> : null}
                 {achievement.evidenceUrl ? (
                   <Button asChild variant="outline" size="xs">
-                    <a href={achievement.evidenceUrl} {...EXTERNAL_LINK_PROPS}>
+                    <a href={leavingHref(achievement.evidenceUrl)} {...EXTERNAL_LINK_PROPS}>
                       <ExternalLink /> Open evidence on {displayHost(achievement.evidenceUrl)}
                     </a>
                   </Button>

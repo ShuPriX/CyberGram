@@ -81,7 +81,7 @@ export function LoginForm({ next }: { next?: string }) {
 function SentPanel({ title, body, devOutbox }: { title: string; body: string; devOutbox: boolean }) {
   return (
     <div className="flex flex-col items-center py-4 text-center">
-      <div className="flex size-12 items-center justify-center rounded-full bg-primary-soft text-primary-soft-foreground">
+      <div className="flex size-12 items-center justify-center rounded-sm bg-primary-soft text-primary-soft-foreground">
         <MailCheck className="size-6" aria-hidden="true" />
       </div>
       <h2 className="mt-4 text-lg font-semibold">{title}</h2>

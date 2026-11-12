@@ -35,7 +35,7 @@ export default async function ManageCompanyPage({ params, searchParams }: { para
   const [team, jobs, categories] = await Promise.all([getCompanyTeam(company.id), listCompanyJobs([company.id]), getActiveCategories()]);
 
   return (
-    <div className="mx-auto max-w-4xl space-y-5">
+    <div className="mx-auto w-full max-w-7xl space-y-5">
       <PageHeader
         title={company.name}
         description={`You are ${role === "owner" ? "an owner" : role === "admin" ? "an admin" : "a recruiter"} of this organisation.`}

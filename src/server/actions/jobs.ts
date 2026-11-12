@@ -50,7 +50,12 @@ import { notify } from "@/server/services/notify";
 export const toggleSaveJobAction = callAction({ schema: z.object({ jobId: zId }), rateLimit: "reaction" }, async ({ jobId }, { user }) => {
   const removed = await db.delete(savedJobs).where(and(eq(savedJobs.userId, user.id), eq(savedJobs.jobId, jobId))).returning({ id: savedJobs.jobId });
   if (removed.length > 0) return ok("Removed from saved jobs.", { saved: false });
-  const [job] = await db.select({ id: jobs.id }).from(jobs).where(eq(jobs.id, jobId)).limit(1);
+  // Only listings that are, or were, public can be saved: a guessed id must never reveal an unpublished one.
+  const [job] = await db
+    .select({ id: jobs.id })
+    .from(jobs)
+    .where(and(eq(jobs.id, jobId), inArray(jobs.status, ["active", "closed", "filled", "expired"])))
+    .limit(1);
   if (!job) return fail("That listing is no longer available.");
   await db.insert(savedJobs).values({ userId: user.id, jobId }).onConflictDoNothing();
   return ok("Job saved.", { saved: true });

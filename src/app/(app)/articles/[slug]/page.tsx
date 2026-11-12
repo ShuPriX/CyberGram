@@ -51,7 +51,7 @@ export default async function ArticlePage({ params }: Props) {
   const path = `/articles/${article.slug}`;
 
   return (
-    <article className="mx-auto max-w-3xl space-y-5">
+    <article className="mx-auto w-full max-w-4xl space-y-5">
       <JsonLd
         data={{
           "@context": "https://schema.org",

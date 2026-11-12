@@ -33,7 +33,7 @@ export function EmptyState({
   return (
     <div className={cn("flex flex-col items-center justify-center px-6 py-12 text-center", className)}>
       {Icon ? (
-        <div className="mb-4 flex size-11 items-center justify-center rounded-full border bg-muted text-muted-foreground">
+        <div className="mb-4 flex size-11 items-center justify-center rounded-sm border border-border-strong bg-muted text-primary">
           <Icon className="size-5" aria-hidden="true" />
         </div>
       ) : null}
@@ -69,13 +69,13 @@ export function LinkTabs({ items, current, className }: { items: TabItem[]; curr
             aria-current={active ? "page" : undefined}
             scroll={false}
             className={cn(
-              "inline-flex shrink-0 items-center gap-1.5 border-b-2 px-3 py-2.5 text-[13px] font-medium transition-colors",
+              "inline-flex shrink-0 items-center gap-1.5 border-b-2 px-3 py-2.5 font-display text-[13px] font-semibold uppercase tracking-[0.06em] transition-colors",
               active ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground",
             )}
           >
             {item.label}
             {item.count !== undefined && item.count > 0 ? (
-              <span className={cn("rounded-full px-1.5 text-[11px] leading-5", active ? "bg-primary-soft text-primary-soft-foreground" : "bg-secondary")}>
+              <span className={cn("rounded-sm px-1.5 font-mono text-[10.5px] leading-5", active ? "bg-primary-soft text-primary-soft-foreground" : "bg-secondary")}>
                 {item.count}
               </span>
             ) : null}
@@ -122,7 +122,7 @@ export function PageHeader({
   return (
     <div className={cn("flex flex-wrap items-end justify-between gap-x-6 gap-y-3", className)}>
       <div className="min-w-0">
-        <h1 className="text-xl font-semibold tracking-tight">{title}</h1>
+        <h1 className="text-[22px] font-bold uppercase leading-tight tracking-[0.03em]">{title}</h1>
         {description ? <p className="mt-1 max-w-2xl text-[13px] leading-relaxed text-muted-foreground">{description}</p> : null}
       </div>
       {action ? <div className="flex shrink-0 flex-wrap items-center gap-2">{action}</div> : null}

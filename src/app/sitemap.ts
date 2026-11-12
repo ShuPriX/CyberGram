@@ -2,6 +2,7 @@ import { and, desc, eq, isNotNull, sql } from "drizzle-orm";
 import type { MetadataRoute } from "next";
 import { db } from "@/db";
 import { communities, companies, jobs, posts, profiles, roadmaps, users } from "@/db/schema";
+import { memo } from "@/lib/cache";
 import { JOB_LANDINGS } from "@/lib/job-landings";
 import { absoluteUrl } from "@/lib/seo";
 import { listJobs, openJobCondition } from "@/server/queries/jobs";
@@ -17,7 +18,12 @@ const LIMIT = 5000;
  * profiles, published articles, active organisations, and landing pages that currently have
  * roles. Demo data is excluded.
  */
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+export default function sitemap(): Promise<MetadataRoute.Sitemap> {
+  // Cached in memory: an unauthenticated URL must not be a way to run dozens of queries per request.
+  return memo("seo:sitemap", 10 * 60_000, buildSitemap);
+}
+
+async function buildSitemap(): Promise<MetadataRoute.Sitemap> {
   const [categories, jobRows, companyRows, articleRows, profileRows, communityRows, roadmapRows, landings] = await Promise.all([
     getActiveCategories(),
     db.select({ slug: jobs.slug, updatedAt: jobs.lastVerifiedAt }).from(jobs).where(and(openJobCondition(), eq(jobs.isDemo, false))).orderBy(desc(jobs.postedAt)).limit(LIMIT),

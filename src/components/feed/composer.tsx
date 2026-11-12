@@ -69,12 +69,12 @@ export function Composer({ viewer, categories, defaultCategory, community, compa
 
   if (!open) {
     return (
-      <div className="flex items-center gap-3 rounded-xl border bg-card p-3 shadow-card sm:p-4">
+      <div className="flex items-center gap-3 rounded-xl border bg-card p-3 sm:p-4">
         <Avatar name={viewer.name} fileId={viewer.avatarFileId} />
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="h-10 flex-1 rounded-full border bg-background px-4 text-left text-[13px] text-muted-foreground transition-colors hover:border-border-strong hover:bg-accent"
+          className="h-10 flex-1 rounded-sm border bg-background px-4 text-left text-[13px] text-muted-foreground transition-colors hover:border-border-strong hover:bg-accent"
         >
           {placeholder ?? "Share research, a write-up or a question…"}
         </button>
@@ -96,7 +96,7 @@ export function Composer({ viewer, categories, defaultCategory, community, compa
         reset();
         if (post) onPosted?.(post);
       }}
-      className="rounded-xl border bg-card p-4 shadow-card sm:p-5"
+      className="rounded-xl border bg-card p-4 sm:p-5"
     >
       <div className="flex gap-3">
         <Avatar name={viewer.name} fileId={viewer.avatarFileId} className="hidden sm:inline-flex" />
@@ -148,7 +148,7 @@ export function Composer({ viewer, categories, defaultCategory, community, compa
                   <button
                     type="button"
                     onClick={() => setAttachments((current) => current.filter((f) => f.id !== file.id))}
-                    className="absolute -right-1.5 -top-1.5 flex size-5 items-center justify-center rounded-full border bg-popover text-muted-foreground shadow-card hover:text-destructive"
+                    className="absolute -right-1.5 -top-1.5 flex size-5 items-center justify-center rounded-sm border bg-popover text-muted-foreground hover:text-destructive"
                     aria-label={`Remove ${file.name}`}
                   >
                     <X className="size-3" />

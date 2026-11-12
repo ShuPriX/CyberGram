@@ -24,8 +24,8 @@ type AvatarProps = {
 
 export function Avatar({ name, fileId, size = "md", shape = "circle", className }: AvatarProps) {
   const base = cn(
-    "inline-flex shrink-0 select-none items-center justify-center overflow-hidden border bg-muted font-medium text-muted-foreground",
-    shape === "circle" ? "rounded-full" : "rounded-lg",
+    "inline-flex shrink-0 select-none items-center justify-center overflow-hidden border bg-muted font-mono font-medium text-muted-foreground",
+    shape === "circle" ? "rounded-sm" : "rounded-sm border-border-strong",
     SIZES[size],
     className,
   );

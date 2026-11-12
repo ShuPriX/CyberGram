@@ -5,7 +5,7 @@ import { requireUser } from "@/lib/auth/session";
 export default async function SettingsLayout({ children }: { children: React.ReactNode }) {
   await requireUser();
   return (
-    <div className="mx-auto grid max-w-4xl gap-6 md:grid-cols-[200px_minmax(0,1fr)]">
+    <div className="mx-auto grid w-full max-w-7xl gap-6 md:grid-cols-[200px_minmax(0,1fr)]">
       <nav aria-label="Settings" className="flex gap-1 overflow-x-auto md:flex-col md:overflow-visible">
         <SideLink href="/settings" exact icon={<UserRound />}>Account</SideLink>
         <SideLink href="/settings/privacy" icon={<Eye />}>Privacy</SideLink>

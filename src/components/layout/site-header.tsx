@@ -49,8 +49,8 @@ export async function SiteHeader() {
   const nav = user ? MEMBER_NAV : VISITOR_NAV;
 
   return (
-    <header className="sticky top-0 z-40 border-b bg-background/90 backdrop-blur-md supports-[backdrop-filter]:bg-background/75">
-      <div className="mx-auto flex h-14 max-w-[1240px] items-center gap-2 px-4 sm:gap-3">
+    <header className="sticky top-0 z-40 border-b bg-background">
+      <div className="mx-auto flex h-14 max-w-[1760px] items-center gap-2 px-4 sm:px-6 xl:px-10 sm:gap-3">
         <Logo href={user ? "/feed" : "/"} />
         <HeaderSearch />
         <nav aria-label="Primary" className="ml-1 hidden items-center gap-0.5 md:flex lg:ml-2">
@@ -102,7 +102,7 @@ export async function MobileTabBar() {
   const user = await getCurrentUser();
   if (!user) {
     return (
-      <nav aria-label="Primary" className="fixed inset-x-0 bottom-0 z-40 flex border-t bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden">
+      <nav aria-label="Primary" className="fixed inset-x-0 bottom-0 z-40 flex border-t bg-background pb-[env(safe-area-inset-bottom)] md:hidden">
         <TabBarLink href="/jobs" label="Jobs" icon={<BriefcaseBusiness />} />
         <TabBarLink href="/explore" label="Explore" icon={<Compass />} />
         <TabBarLink href="/communities" label="Communities" icon={<UsersRound />} />
@@ -111,7 +111,7 @@ export async function MobileTabBar() {
     );
   }
   return (
-    <nav aria-label="Primary" className="fixed inset-x-0 bottom-0 z-40 flex border-t bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden">
+    <nav aria-label="Primary" className="fixed inset-x-0 bottom-0 z-40 flex border-t bg-background pb-[env(safe-area-inset-bottom)] md:hidden">
       <TabBarLink href="/feed" label="Feed" icon={<House />} />
       <TabBarLink href="/explore" label="Explore" icon={<Compass />} />
       <TabBarLink href="/jobs" label="Jobs" icon={<BriefcaseBusiness />} />

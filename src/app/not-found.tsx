@@ -6,11 +6,11 @@ import { Button } from "@/components/ui/button";
 export default function NotFound() {
   return (
     <div className="flex min-h-dvh flex-col">
-      <header className="mx-auto flex h-14 w-full max-w-[1240px] items-center px-4">
+      <header className="mx-auto flex h-14 w-full max-w-[1760px] items-center px-4 sm:px-6 xl:px-10">
         <Logo />
       </header>
       <main id="main" className="flex flex-1 flex-col items-center justify-center px-4 pb-24 text-center">
-        <div className="flex size-12 items-center justify-center rounded-full border bg-muted text-muted-foreground">
+        <div className="flex size-12 items-center justify-center rounded-sm border bg-muted text-muted-foreground">
           <Compass className="size-5" aria-hidden="true" />
         </div>
         <p className="mt-5 text-[13px] font-semibold uppercase tracking-wider text-primary">404</p>

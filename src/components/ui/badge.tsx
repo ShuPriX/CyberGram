@@ -3,13 +3,13 @@ import type * as React from "react";
 import { cn } from "@/lib/utils";
 
 export const badgeVariants = cva(
-  "inline-flex max-w-full items-center gap-1 whitespace-nowrap rounded-md px-2 py-0.5 text-xs font-medium leading-5 [&_svg]:size-3 [&_svg]:shrink-0",
+  "inline-flex max-w-full items-center gap-1 whitespace-nowrap rounded-sm border border-transparent px-1.5 py-px font-mono text-[10.5px] font-medium uppercase leading-5 tracking-[0.06em] [&_svg]:size-3 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        neutral: "bg-secondary text-secondary-foreground",
+        neutral: "border-border bg-secondary text-secondary-foreground",
         outline: "border border-border-strong text-muted-foreground",
-        primary: "bg-primary-soft text-primary-soft-foreground",
+        primary: "border-primary/40 bg-primary-soft text-primary-soft-foreground",
         success: "bg-success-soft text-success",
         warning: "bg-warning-soft text-warning",
         danger: "bg-destructive-soft text-destructive-soft-foreground",

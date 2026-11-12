@@ -23,7 +23,7 @@ export function ResourceList({ resources, categories, signedIn }: { resources: R
   return (
     <ul className="grid gap-3 lg:grid-cols-2">
       {resources.map((resource) => (
-        <li key={resource.id} className="flex gap-3 rounded-xl border bg-card p-4 shadow-card">
+        <li key={resource.id} className="flex gap-3 rounded-xl border bg-card p-4">
           <div className="flex shrink-0 flex-col items-center">
             {signedIn ? (
               <ActionButton

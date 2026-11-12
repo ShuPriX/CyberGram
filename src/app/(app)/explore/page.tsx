@@ -35,7 +35,7 @@ export default async function ExplorePage() {
         <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {categories.map((category) => (
             <li key={category.slug}>
-              <Link href={`/explore/${category.slug}`} className="group flex h-full flex-col rounded-xl border bg-card p-4 shadow-card transition-colors hover:border-border-strong">
+              <Link href={`/explore/${category.slug}`} className="group flex h-full flex-col rounded-xl border bg-card p-4 transition-colors hover:border-border-strong">
                 <span className="flex items-baseline justify-between gap-2">
                   <span className="text-[14px] font-semibold group-hover:text-primary">{category.name}</span>
                   <span className="shrink-0 text-xs text-subtle">{formatCount(counts[category.slug] ?? 0)} posts</span>

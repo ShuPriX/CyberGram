@@ -15,7 +15,7 @@ export function PostSkeleton() {
   return (
     <div className="rounded-xl border bg-card p-5" aria-hidden="true">
       <div className="flex gap-3">
-        <Skeleton className="size-10 rounded-full" />
+        <Skeleton className="size-10 rounded-sm" />
         <div className="flex-1 space-y-2">
           <Skeleton className="h-3.5 w-40" />
           <Skeleton className="h-3 w-56" />

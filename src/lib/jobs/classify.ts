@@ -15,8 +15,13 @@ const SECURITY_TITLE =
 // Titles that mention "security" but are not security roles.
 const NOT_SECURITY = /\b(security\s+(guard|officer\s+-\s+site|deposit)|physical\s+security\s+guard|social\s+security|job\s+security)\b/i;
 
+// Commercial and support roles at security vendors. Their titles often contain "security" or
+// "cyber", but they are not security practitioner jobs and do not belong on this board.
+const NOT_PRACTITIONER =
+  /\b(sales|account\s+(executive|manager|director)|business\s+development|bdr|sdr|marketing|demand\s+gen\w*|customer\s+success|renewals?|partner\s+(manager|sales|marketing)|channel|alliances?|recruit\w*|talent|people\s+(partner|ops|operations)|product\s+(manager|management|marketing|design\w*)|product\s+owner|ux|ui\s+designer|graphic|copywriter|content\s+(writer|marketing|strateg\w+)|technical\s+writer|counsel|paralegal|legal|accountant|accounting|finance|financial\s+analyst|payroll|procurement|executive\s+assistant|office\s+manager|facilit\w+|workplace|events?\s+(manager|coordinator)|field\s+cto|evangelist|community\s+manager)\b/i;
+
 export function isSecurityRole(title: string, department?: string | null): boolean {
-  if (NOT_SECURITY.test(title)) return false;
+  if (NOT_SECURITY.test(title) || NOT_PRACTITIONER.test(title)) return false;
   return SECURITY_TITLE.test(title) || (department ? /\b(security|infosec|trust\s*&?\s*safety\s+engineering)\b/i.test(department) : false);
 }
 

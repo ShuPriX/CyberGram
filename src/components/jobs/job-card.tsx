@@ -41,7 +41,7 @@ export function jobLocationLabel(job: Pick<JobListItem, "location" | "country" |
 export function JobCard({ job, compact = false, action }: { job: JobListItem; compact?: boolean; action?: React.ReactNode }) {
   const salary = formatSalary(job.salaryMin, job.salaryMax, job.salaryCurrency, job.salaryPeriod);
   return (
-    <article className="group relative rounded-xl border bg-card p-4 shadow-card transition-colors hover:border-border-strong sm:p-5">
+    <article className="group relative rounded-xl border bg-card p-4 transition-colors hover:border-border-strong sm:p-5">
       <div className="flex items-start gap-3">
         <Avatar name={job.companyName} fileId={job.company?.logoFileId} shape="square" size={compact ? "sm" : "md"} />
         <div className="min-w-0 flex-1">

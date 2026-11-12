@@ -11,7 +11,7 @@ export default async function NewArticlePage() {
   await requireOnboardedUser();
   const categories = await getActiveCategories();
   return (
-    <div className="mx-auto max-w-3xl space-y-5">
+    <div className="mx-auto w-full max-w-6xl space-y-5">
       <PageHeader title="Write an article" description="Share a write-up, research or a guide. Articles get their own page and can be found through search." />
       <Card>
         <CardContent>

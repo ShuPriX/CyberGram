@@ -144,7 +144,7 @@ export default async function JobPage({ params }: Props) {
         </p>
       ) : null}
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_400px]">
         <div className="min-w-0 space-y-4">
           <Card>
             <CardContent className="space-y-4">

@@ -32,13 +32,13 @@ export function ChipGroup({
   const chosen = new Set(selected);
   return (
     <fieldset className={cn("min-w-0", className)}>
-      <legend className="text-[13px] font-medium">{legend}</legend>
+      <legend className="label-mono text-muted-foreground">{legend}</legend>
       {hint ? <p className="mt-1 text-xs text-muted-foreground">{hint}</p> : null}
       <div className="mt-2 flex flex-wrap gap-1.5">
         {options.map((option) => (
           <label
             key={option.value}
-            className="inline-flex cursor-pointer select-none items-center rounded-full border bg-card px-3 py-1 text-[13px] text-muted-foreground transition-colors hover:border-border-strong has-[:checked]:border-primary has-[:checked]:bg-primary-soft has-[:checked]:text-primary-soft-foreground has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-ring"
+            className="inline-flex cursor-pointer select-none items-center rounded-sm border bg-transparent px-2.5 py-1 font-mono text-[12px] text-muted-foreground transition-colors hover:border-border-strong has-[:checked]:border-primary has-[:checked]:bg-primary-soft has-[:checked]:text-primary-soft-foreground has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-ring"
           >
             <input type={type} name={type === "checkbox" && bracket ? `${name}[]` : name} value={option.value} defaultChecked={chosen.has(option.value)} className="sr-only" />
             {option.label}
@@ -105,7 +105,7 @@ export function VerificationBadge({ status, className }: { status: VerificationS
 /** Two-column page frame: main content plus a side rail that drops below on small screens. */
 export function PageColumns({ children, aside, className }: { children: React.ReactNode; aside?: React.ReactNode; className?: string }) {
   return (
-    <div className={cn("grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]", className)}>
+    <div className={cn("grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px]", className)}>
       <div className="min-w-0 space-y-4">{children}</div>
       {aside ? <aside className="min-w-0 space-y-4">{aside}</aside> : null}
     </div>

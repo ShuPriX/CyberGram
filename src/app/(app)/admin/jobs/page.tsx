@@ -12,6 +12,7 @@ import { EmptyState, PageHeader, TimeAgo } from "@/components/ui/misc";
 import { db } from "@/db";
 import { companies, jobs, users } from "@/db/schema";
 import { requireCapability } from "@/lib/auth/session";
+import { leavingHref } from "@/lib/security/link-safety";
 import { EMPLOYMENT_TYPE_LABELS, EXPERIENCE_LEVEL_LABELS } from "@/lib/constants";
 import { privateMetadata } from "@/lib/seo";
 import { displayHost, truncate } from "@/lib/utils";
@@ -69,8 +70,8 @@ export default async function AdminJobsPage() {
               <p className="whitespace-pre-line text-[13px] leading-relaxed text-muted-foreground">{truncate(job.description, 600)}</p>
               {job.applyUrl ?? job.sourceUrl ? (
                 <Button asChild variant="outline" size="xs">
-                  {/* Moderators open the original directly: the interstitial is for member-facing links. */}
-                  <a href={(job.sourceUrl ?? job.applyUrl)!} {...EXTERNAL_LINK_PROPS}>
+                  {/* Opens through the interstitial, which shows the real destination and any warning signs. */}
+                  <a href={leavingHref((job.sourceUrl ?? job.applyUrl)!)} {...EXTERNAL_LINK_PROPS}>
                     <ExternalLink /> Open original on {displayHost((job.sourceUrl ?? job.applyUrl)!)}
                   </a>
                 </Button>

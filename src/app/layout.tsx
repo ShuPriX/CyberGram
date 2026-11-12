@@ -1,12 +1,17 @@
-import { GeistMono } from "geist/font/mono";
-import { GeistSans } from "geist/font/sans";
 import type { Metadata, Viewport } from "next";
+import { Chakra_Petch, IBM_Plex_Sans, JetBrains_Mono } from "next/font/google";
 import { headers } from "next/headers";
 import { Toaster } from "@/components/ui/toast";
 import { APP_DESCRIPTION, APP_NAME, APP_TAGLINE } from "@/lib/constants";
 import { SITE_URL } from "@/lib/seo";
 import { THEME_INIT_SCRIPT } from "@/lib/theme";
 import "./globals.css";
+
+// Fonts are downloaded at build time and served from this origin, so the strict
+// `font-src 'self'` policy holds and no visitor request ever reaches a font CDN.
+const heading = Chakra_Petch({ subsets: ["latin"], weight: ["500", "600", "700"], variable: "--font-heading", display: "swap" });
+const body = IBM_Plex_Sans({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-body", display: "swap" });
+const code = JetBrains_Mono({ subsets: ["latin"], weight: ["400", "500", "700"], variable: "--font-code", display: "swap" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -44,8 +49,8 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f7f8fa" },
-    { media: "(prefers-color-scheme: dark)", color: "#0b0f14" },
+    { media: "(prefers-color-scheme: light)", color: "#eef1f3" },
+    { media: "(prefers-color-scheme: dark)", color: "#050505" },
   ],
 };
 
@@ -55,7 +60,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const nonce = (await headers()).get("x-nonce") ?? undefined;
 
   return (
-    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`dark ${heading.variable} ${body.variable} ${code.variable}`} suppressHydrationWarning>
       <head>
         <script nonce={nonce} dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} suppressHydrationWarning />
       </head>

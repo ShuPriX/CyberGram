@@ -42,7 +42,7 @@ export default async function LearnPage() {
             const total = roadmap.steps.length;
             return (
               <li key={roadmap.id}>
-                <Link href={`/learn/roadmaps/${roadmap.slug}`} className="group flex h-full flex-col rounded-xl border bg-card p-4 shadow-card transition-colors hover:border-border-strong">
+                <Link href={`/learn/roadmaps/${roadmap.slug}`} className="group flex h-full flex-col rounded-xl border bg-card p-4 transition-colors hover:border-border-strong">
                   <span className="flex items-start justify-between gap-2">
                     <span className="text-[14.5px] font-semibold group-hover:text-primary">{roadmap.title}</span>
                     <Badge variant="outline" className="capitalize">{roadmap.level}</Badge>
@@ -54,8 +54,8 @@ export default async function LearnPage() {
                       {user && done > 0 ? <span>{done} of {total} done</span> : null}
                     </span>
                     {user && done > 0 ? (
-                      <span className="mt-1.5 block h-1.5 overflow-hidden rounded-full bg-secondary" role="progressbar" aria-valuenow={done} aria-valuemin={0} aria-valuemax={total} aria-label="Progress">
-                        <span className="block h-full rounded-full bg-primary" style={{ width: `${(done / Math.max(total, 1)) * 100}%` }} />
+                      <span className="mt-1.5 block h-1.5 overflow-hidden rounded-sm bg-secondary" role="progressbar" aria-valuenow={done} aria-valuemin={0} aria-valuemax={total} aria-label="Progress">
+                        <span className="block h-full rounded-sm bg-primary" style={{ width: `${(done / Math.max(total, 1)) * 100}%` }} />
                       </span>
                     ) : null}
                   </span>

@@ -94,7 +94,7 @@ export default async function EditProfilePage() {
   if (!profile) return null;
 
   return (
-    <div className="mx-auto max-w-3xl space-y-5">
+    <div className="mx-auto w-full max-w-6xl space-y-5">
       <PageHeader
         title="Edit profile"
         description="This is what members, recruiters and search engines see. Privacy controls live in Settings."

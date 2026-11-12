@@ -21,7 +21,7 @@ export default async function ResumesPage() {
   const resumes = await listResumes(user.id);
 
   return (
-    <div className="mx-auto max-w-3xl space-y-5">
+    <div className="mx-auto w-full max-w-6xl space-y-5">
       <PageHeader title="Résumés" description={`Keep up to ${LIMITS.resumesPerUser} versions and choose one each time you apply.`} />
       <JobsNav current="resumes" signedIn />
 

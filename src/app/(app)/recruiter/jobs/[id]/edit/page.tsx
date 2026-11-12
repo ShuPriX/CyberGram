@@ -20,7 +20,7 @@ export default async function EditJobPage({ params }: { params: Promise<{ id: st
   if (!access || job.status === "rejected") notFound();
   const { company } = access;
   return (
-    <div className="mx-auto max-w-3xl space-y-5">
+    <div className="mx-auto w-full max-w-6xl space-y-5">
       <PageHeader title="Edit listing" description={job.title} />
       <CompanyJobForm company={{ id: company.id, name: company.name, verified: company.verificationStatus === "verified" }} job={job} />
     </div>

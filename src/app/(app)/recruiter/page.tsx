@@ -24,7 +24,7 @@ export default async function RecruiterPage() {
 
   if (companies.length === 0) {
     return (
-      <div className="mx-auto max-w-3xl space-y-5">
+      <div className="mx-auto w-full max-w-6xl space-y-5">
         <PageHeader title="Recruiter portal" description="Publish cybersecurity roles, review applicants and build your organisation's presence." />
         <Card>
           <EmptyState

@@ -14,7 +14,7 @@ export const metadata = privateMetadata("Submit a job");
 export default async function SubmitJobPage() {
   await requireOnboardedUser();
   return (
-    <div className="mx-auto max-w-3xl space-y-5">
+    <div className="mx-auto w-full max-w-6xl space-y-5">
       <PageHeader
         title="Submit a job you found"
         description="Spotted a genuine cybersecurity opening on an employer's site? Share it with the community."

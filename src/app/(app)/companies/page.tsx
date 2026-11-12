@@ -53,7 +53,7 @@ export default async function CompaniesPage({ searchParams }: { searchParams: Pr
         }
       />
 
-      <form action="/companies" method="get" className="grid gap-3 rounded-xl border bg-card p-4 shadow-card sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr_auto]">
+      <form action="/companies" method="get" className="grid gap-3 rounded-xl border bg-card p-4 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr_auto]">
         <Input name="q" type="search" defaultValue={filters.q ?? ""} maxLength={80} placeholder="Search by name" aria-label="Search companies" />
         <Select name="type" defaultValue={type ?? ""} aria-label="Organisation type">
           <option value="">Any type</option>

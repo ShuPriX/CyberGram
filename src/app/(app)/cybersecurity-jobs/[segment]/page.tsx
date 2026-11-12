@@ -50,7 +50,7 @@ export default async function JobLandingPage({ params, searchParams }: Props) {
         <ul className="mt-3 flex flex-wrap gap-1.5">
           {related.map((item) => (
             <li key={item.slug}>
-              <Link href={`/cybersecurity-jobs/${item.slug}`} className="inline-flex rounded-full border bg-card px-3 py-1 text-[13px] text-muted-foreground hover:border-border-strong hover:text-foreground">
+              <Link href={`/cybersecurity-jobs/${item.slug}`} className="inline-flex rounded-sm border bg-card px-3 py-1 text-[13px] text-muted-foreground hover:border-border-strong hover:text-foreground">
                 {item.title}
               </Link>
             </li>

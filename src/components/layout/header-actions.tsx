@@ -80,7 +80,7 @@ function IconLink({ href, label, count, children }: { href: string; label: strin
     >
       {children}
       {count > 0 ? (
-        <span className="absolute right-1 top-1 min-w-4 rounded-full bg-destructive px-1 text-center text-[10px] font-semibold leading-4 text-destructive-foreground">
+        <span className="absolute right-1 top-1 min-w-4 rounded-sm bg-destructive px-1 text-center text-[10px] font-semibold leading-4 text-destructive-foreground">
           {count > 9 ? "9+" : count}
         </span>
       ) : null}
@@ -109,7 +109,7 @@ export function HeaderActions({ user, initialCounts }: { user: HeaderUser; initi
       </IconLink>
 
       <DropdownMenu>
-        <DropdownMenuTrigger className="ml-1 rounded-full" aria-label="Account menu">
+        <DropdownMenuTrigger className="ml-1 rounded-sm" aria-label="Account menu">
           <Avatar name={user.name} fileId={user.avatarFileId} size="sm" />
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-60">

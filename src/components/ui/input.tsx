@@ -2,7 +2,7 @@ import type * as React from "react";
 import { cn } from "@/lib/utils";
 
 const control =
-  "w-full rounded-md border border-input bg-card text-sm text-foreground shadow-card transition-colors placeholder:text-subtle hover:border-border-strong focus-visible:border-ring focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-ring/30 disabled:cursor-not-allowed disabled:opacity-60 aria-invalid:border-destructive aria-invalid:outline-destructive/30";
+  "w-full rounded-sm border border-input bg-background text-sm text-foreground transition-colors placeholder:text-subtle hover:border-border-strong focus-visible:border-ring focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-ring/30 disabled:cursor-not-allowed disabled:opacity-60 aria-invalid:border-destructive aria-invalid:outline-destructive/30";
 
 export function Input({ className, type = "text", ...props }: React.ComponentProps<"input">) {
   return <input type={type} className={cn(control, "h-9 px-3", className)} {...props} />;
@@ -30,7 +30,7 @@ export function Select({ className, children, ...props }: React.ComponentProps<"
 }
 
 export function Label({ className, ...props }: React.ComponentProps<"label">) {
-  return <label className={cn("text-[13px] font-medium leading-none text-foreground", className)} {...props} />;
+  return <label className={cn("label-mono leading-none text-muted-foreground", className)} {...props} />;
 }
 
 export function Checkbox({ className, ...props }: Omit<React.ComponentProps<"input">, "type">) {

@@ -71,7 +71,7 @@ export default async function CompanyPage({ params, searchParams }: Props) {
   ].filter((l) => l !== null);
 
   return (
-    <div className="mx-auto max-w-[1040px] space-y-4">
+    <div className="mx-auto max-w-[1600px] space-y-4">
       {!company.isDemo ? (
         <JsonLd
           data={{
@@ -162,7 +162,7 @@ export default async function CompanyPage({ params, searchParams }: Props) {
       </Card>
 
       {tab === "overview" ? (
-        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_300px]">
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_380px]">
           <div className="min-w-0 space-y-4">
             <Section title="About">
               {company.description ? <Markdown>{company.description}</Markdown> : <p className="text-[13px] text-muted-foreground">This organisation has not added a description yet.</p>}
@@ -236,7 +236,7 @@ export default async function CompanyPage({ params, searchParams }: Props) {
       ) : null}
 
       {tab === "posts" && posts ? (
-        <div className="mx-auto max-w-2xl">
+        <div className="mx-auto w-full max-w-5xl">
           <FeedList
             initial={posts}
             request={{ companyId: company.id }}

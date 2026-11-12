@@ -9,7 +9,7 @@ import { db } from "@/db";
 import { events, resources, users } from "@/db/schema";
 import { requireCapability } from "@/lib/auth/session";
 import { EVENT_TYPE_LABELS, RESOURCE_TYPE_LABELS } from "@/lib/constants";
-import { assessLink } from "@/lib/security/link-safety";
+import { assessLink, leavingHref } from "@/lib/security/link-safety";
 import { privateMetadata } from "@/lib/seo";
 import { displayHost, formatDate } from "@/lib/utils";
 import { reviewSubmissionAction } from "@/server/actions/admin";
@@ -20,7 +20,7 @@ function LinkLine({ url }: { url: string }) {
   const assessment = assessLink(url);
   return (
     <p className="flex flex-wrap items-center gap-2 text-[13px]">
-      <a href={url} className="inline-flex items-center gap-1 font-medium text-primary hover:underline" {...EXTERNAL_LINK_PROPS}>
+      <a href={leavingHref(url)} className="inline-flex items-center gap-1 font-medium text-primary hover:underline" {...EXTERNAL_LINK_PROPS}>
         <ExternalLink className="size-3.5" aria-hidden="true" /> {displayHost(url)}
       </a>
       {assessment && assessment.level !== "ok" ? <Badge variant={assessment.level === "danger" ? "danger" : "warning"}>{assessment.reasons[0]}</Badge> : null}

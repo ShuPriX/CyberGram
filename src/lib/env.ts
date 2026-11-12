@@ -46,7 +46,9 @@ const schema = z.object({
   UPLOAD_REQUIRE_SCAN: flag(false),
 
   CRON_SECRET: optionalString,
-  ENABLE_INTERNAL_SCHEDULER: flag(false),
+  // On by default so job listings refresh without any extra setup. Turn it off when an
+  // external scheduler calls /api/cron/daily, or when running several instances.
+  ENABLE_INTERNAL_SCHEDULER: flag(true),
 
   TRUSTED_PROXY_HOPS: int(1),
   HIBP_CHECK: flag(true),

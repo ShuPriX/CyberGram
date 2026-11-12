@@ -33,6 +33,9 @@ const toDate = (value: unknown): Date | null => {
 };
 const text = (value: unknown): string => (typeof value === "string" ? value.trim() : "");
 
+// Large employers publish several hundred roles with full descriptions in one response.
+const BOARD_FETCH = { maxBytes: 64 * 1024 * 1024, timeoutMs: 60_000 } as const;
+
 // ── Greenhouse Job Board API ────────────────────────────────────────────────
 type GreenhouseJob = {
   id: number;
@@ -48,6 +51,7 @@ type GreenhouseJob = {
 async function fetchGreenhouse(target: string): Promise<SourceJob[]> {
   const data = await safeFetchJson<{ jobs?: GreenhouseJob[] }>(
     `https://boards-api.greenhouse.io/v1/boards/${assertToken(target, "board token")}/jobs?content=true`,
+    BOARD_FETCH,
   );
   if (!Array.isArray(data.jobs)) throw new Error("Unexpected Greenhouse response.");
   return data.jobs.map((job) => ({
@@ -77,7 +81,7 @@ type LeverPosting = {
 };
 
 async function fetchLever(target: string): Promise<SourceJob[]> {
-  const data = await safeFetchJson<LeverPosting[]>(`https://api.lever.co/v0/postings/${assertToken(target, "site name")}?mode=json`);
+  const data = await safeFetchJson<LeverPosting[]>(`https://api.lever.co/v0/postings/${assertToken(target, "site name")}?mode=json`, BOARD_FETCH);
   if (!Array.isArray(data)) throw new Error("Unexpected Lever response.");
   return data.map((posting) => {
     const sections = (posting.lists ?? [])
@@ -129,6 +133,7 @@ type AshbyJob = {
 async function fetchAshby(target: string): Promise<SourceJob[]> {
   const data = await safeFetchJson<{ jobs?: AshbyJob[] }>(
     `https://api.ashbyhq.com/posting-api/job-board/${assertToken(target, "job board name")}?includeCompensation=false`,
+    BOARD_FETCH,
   );
   if (!Array.isArray(data.jobs)) throw new Error("Unexpected Ashby response.");
   return data.jobs

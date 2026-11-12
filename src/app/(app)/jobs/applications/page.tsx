@@ -23,7 +23,7 @@ export default async function ApplicationsPage() {
   const applications = await listMyApplications(user.id);
 
   return (
-    <div className="mx-auto max-w-3xl space-y-5">
+    <div className="mx-auto w-full max-w-6xl space-y-5">
       <PageHeader title="My applications" description="Every application you made on CyberGram and where it stands. Applications made on an employer's own site are not tracked here." />
       <JobsNav current="applications" signedIn />
       {applications.length === 0 ? (
@@ -61,7 +61,7 @@ export default async function ApplicationsPage() {
                 <ol className="flex flex-wrap gap-x-5 gap-y-1.5 border-t pt-3 text-xs text-muted-foreground">
                   {application.events.map((event, index) => (
                     <li key={index} className="flex items-center gap-1.5">
-                      <span className="size-1.5 rounded-full bg-primary" aria-hidden="true" />
+                      <span className="size-1.5 rounded-sm bg-primary" aria-hidden="true" />
                       <span className="font-medium text-foreground">{APPLICATION_STATUS_META[event.status].label}</span>
                       {formatDate(event.createdAt, "short")}
                     </li>

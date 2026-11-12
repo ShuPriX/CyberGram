@@ -13,7 +13,7 @@ export default async function BookmarksPage() {
   const user = await requireOnboardedUser();
   const [initial, categories] = await Promise.all([getFeed({ viewer: { id: user.id, role: user.role }, bookmarkedBy: user.id }), getCategoryNames()]);
   return (
-    <div className="mx-auto max-w-2xl space-y-5">
+    <div className="mx-auto w-full max-w-5xl space-y-5">
       <PageHeader title="Bookmarks" description="Posts and articles you saved. Only you can see this list." />
       <FeedList
         initial={initial}

@@ -27,7 +27,7 @@ export default async function AchievementsPage() {
   );
 
   return (
-    <div className="mx-auto max-w-3xl space-y-5">
+    <div className="mx-auto w-full max-w-6xl space-y-5">
       <PageHeader
         title="Achievements"
         description="Certifications, CTF placements, bug bounties, CVEs, publications and talks. Each entry shows whether it has been verified."

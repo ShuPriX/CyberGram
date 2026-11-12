@@ -42,7 +42,7 @@ export default async function FeedPage({ searchParams }: { searchParams: Promise
   const categoryNames = Object.fromEntries(categories.map((c) => [c.slug, c.name]));
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[220px_minmax(0,1fr)] xl:grid-cols-[220px_minmax(0,1fr)_300px]">
+    <div className="grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)] xl:grid-cols-[280px_minmax(0,1fr)_360px]">
       <aside className="hidden space-y-4 lg:block">
         <Card className="overflow-hidden">
           <div className="h-14 bg-primary-soft" />

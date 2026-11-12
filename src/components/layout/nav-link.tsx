@@ -18,8 +18,10 @@ export function NavLink({ href, children, exact }: { href: string; children: Rea
       href={href}
       aria-current={active ? "page" : undefined}
       className={cn(
-        "rounded-md px-2.5 py-1.5 text-[13px] font-medium transition-colors",
-        active ? "bg-accent text-foreground" : "text-muted-foreground hover:bg-accent hover:text-foreground",
+        "relative px-2.5 py-1.5 font-display text-[13px] font-semibold uppercase tracking-[0.07em] transition-colors",
+        active
+          ? "text-foreground after:absolute after:inset-x-2.5 after:-bottom-[13px] after:h-0.5 after:bg-primary"
+          : "text-muted-foreground hover:text-foreground",
       )}
     >
       {children}
@@ -42,7 +44,7 @@ export function TabBarLink({ href, label, icon, badge }: { href: string; label: 
       <span className="relative">
         {icon}
         {badge ? (
-          <span className="absolute -right-2 -top-1 min-w-4 rounded-full bg-destructive px-1 text-center text-[10px] font-semibold leading-4 text-destructive-foreground">
+          <span className="absolute -right-2 -top-1 min-w-4 rounded-sm bg-destructive px-1 text-center text-[10px] font-semibold leading-4 text-destructive-foreground">
             {badge > 9 ? "9+" : badge}
           </span>
         ) : null}

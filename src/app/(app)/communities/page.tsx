@@ -29,7 +29,7 @@ export default async function CommunitiesPage() {
     <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
       {items.map((community) => (
         <li key={community.id}>
-          <article className="group relative flex h-full flex-col rounded-xl border bg-card p-4 shadow-card transition-colors hover:border-border-strong">
+          <article className="group relative flex h-full flex-col rounded-xl border bg-card p-4 transition-colors hover:border-border-strong">
             <h3 className="flex items-center gap-1.5 text-[14.5px] font-semibold">
               <Link href={`/communities/${community.slug}`} className="after:absolute after:inset-0 group-hover:text-primary">
                 {community.name}

@@ -27,7 +27,7 @@ export default async function CandidatesPage({ searchParams }: { searchParams: P
   // Candidate discovery is restricted to members of a *verified* organisation.
   if (!(await isVerifiedRecruiter(user.id))) {
     return (
-      <div className="mx-auto max-w-3xl space-y-5">
+      <div className="mx-auto w-full max-w-6xl space-y-5">
         <PageHeader title="Find candidates" />
         <Card>
           <EmptyState
@@ -64,7 +64,7 @@ export default async function CandidatesPage({ searchParams }: { searchParams: P
   return (
     <div className="space-y-5">
       <PageHeader title="Find candidates" description="Members who chose to be discoverable by recruiters. Everyone listed here opted in, and can opt out at any time." />
-      <form action="/recruiter/candidates" method="get" className="grid gap-3 rounded-xl border bg-card p-4 shadow-card sm:grid-cols-2 lg:grid-cols-[1.2fr_1.2fr_1fr_1fr_auto]">
+      <form action="/recruiter/candidates" method="get" className="grid gap-3 rounded-xl border bg-card p-4 sm:grid-cols-2 lg:grid-cols-[1.2fr_1.2fr_1fr_1fr_auto]">
         <Input name="q" type="search" defaultValue={filters.q ?? ""} maxLength={80} placeholder="Name, headline or title" aria-label="Keywords" />
         <Input name="skills" list="skill-options" defaultValue={one(params.skills) ?? ""} maxLength={200} placeholder="Skills, comma-separated" aria-label="Skills" />
         <SkillDatalist />

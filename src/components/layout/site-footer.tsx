@@ -39,7 +39,7 @@ const COLUMNS = [
 export function SiteFooter() {
   return (
     <footer className="border-t bg-card">
-      <div className="mx-auto grid max-w-[1240px] gap-10 px-4 py-12 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+      <div className="mx-auto grid max-w-[1760px] gap-10 px-4 sm:px-6 xl:px-10 py-12 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div>
           <Logo />
           <p className="mt-3 max-w-xs text-[13px] leading-relaxed text-muted-foreground">
@@ -62,7 +62,7 @@ export function SiteFooter() {
         ))}
       </div>
       <div className="border-t">
-        <p className="mx-auto max-w-[1240px] px-4 py-5 text-xs text-subtle">
+        <p className="mx-auto max-w-[1760px] px-4 sm:px-6 xl:px-10 py-5 text-xs text-subtle">
           © {new Date().getUTCFullYear()} {APP_NAME}. Built for the people who defend, break and build secure systems.
         </p>
       </div>

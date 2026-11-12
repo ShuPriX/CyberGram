@@ -19,7 +19,7 @@ export default async function OnboardingPage() {
   const [[profile], categories] = await Promise.all([db.select().from(profiles).where(eq(profiles.userId, user.id)).limit(1), getActiveCategories()]);
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="mx-auto w-full max-w-5xl">
       <h1 className="text-xl font-semibold tracking-tight">Welcome to {APP_NAME}, {user.name.split(" ")[0]}</h1>
       <p className="mt-1 text-[13px] text-muted-foreground">
         A few details so your feed, job matches and suggestions are relevant from the start. You can change all of this later.

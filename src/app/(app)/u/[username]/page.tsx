@@ -58,12 +58,13 @@ export default async function ProfilePage({ params }: Props) {
   if (!data) notFound();
   const { user, profile, relationship } = data;
   const isSelf = relationship.isSelf;
+  const limited = data.access === "limited";
   const place = [profile.location, countryName(profile.country)].filter(Boolean).join(", ");
 
   const header = (
     <Card className="overflow-hidden">
       <div className="aspect-[4/1] max-h-52 w-full bg-primary-soft">
-        {profile.coverFileId ? <img src={`/api/files/${profile.coverFileId}`} alt="" className="size-full object-cover" /> : null}
+        {profile.coverFileId && !limited ? <img src={`/api/files/${profile.coverFileId}`} alt="" className="size-full object-cover" /> : null}
       </div>
       <div className="px-5 pb-5">
         <div className="-mt-10 flex flex-wrap items-end justify-between gap-3 sm:-mt-12">
@@ -96,15 +97,15 @@ export default async function ProfilePage({ params }: Props) {
             {data.showOpenToWork ? <Badge variant="success">Open to work</Badge> : null}
           </h1>
           <p className="text-[13px] text-subtle">@{user.username}{relationship.followsYou ? " · Follows you" : ""}</p>
-          {profile.headline ? <p className="mt-1.5 text-[14.5px] leading-snug">{profile.headline}</p> : null}
+          {profile.headline && !limited ? <p className="mt-1.5 text-[14.5px] leading-snug">{profile.headline}</p> : null}
           <div className="mt-2.5 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[13px] text-muted-foreground">
-            {profile.currentTitle || profile.currentCompany ? (
+            {!limited && (profile.currentTitle || profile.currentCompany) ? (
               <span className="inline-flex items-center gap-1.5">
                 <BriefcaseBusiness className="size-4" aria-hidden="true" />
                 {[profile.currentTitle, profile.currentCompany].filter(Boolean).join(" at ")}
               </span>
             ) : null}
-            {place ? (
+            {place && !limited ? (
               <span className="inline-flex items-center gap-1.5">
                 <MapPin className="size-4" aria-hidden="true" /> {place}
               </span>
@@ -113,7 +114,7 @@ export default async function ProfilePage({ params }: Props) {
               <CalendarDays className="size-4" aria-hidden="true" /> Joined {formatDate(user.createdAt, "monthYear")}
             </span>
           </div>
-          <p className="mt-2.5 flex flex-wrap gap-x-4 text-[13px]">
+          <p className={limited ? "hidden" : "mt-2.5 flex flex-wrap gap-x-4 text-[13px]"}>
             <span><strong className="font-semibold">{formatCount(profile.connectionCount)}</strong> <span className="text-muted-foreground">connections</span></span>
             <span><strong className="font-semibold">{formatCount(profile.followerCount)}</strong> <span className="text-muted-foreground">followers</span></span>
             <span><strong className="font-semibold">{formatCount(profile.followingCount)}</strong> <span className="text-muted-foreground">following</span></span>
@@ -123,9 +124,9 @@ export default async function ProfilePage({ params }: Props) {
     </Card>
   );
 
-  if (data.access === "limited") {
+  if (limited) {
     return (
-      <div className="mx-auto max-w-3xl space-y-4">
+      <div className="mx-auto w-full max-w-6xl space-y-4">
         {header}
         <Card>
           <EmptyState
@@ -158,7 +159,7 @@ export default async function ProfilePage({ params }: Props) {
   const showEmail = profile.showEmail && viewer !== null;
 
   return (
-    <div className="mx-auto grid max-w-[1040px] gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
+    <div className="mx-auto grid max-w-[1600px] gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
       {profile.visibility === "public" && profile.indexable ? (
         <JsonLd
           data={{

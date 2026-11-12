@@ -27,7 +27,7 @@ export function EventList({ events: items }: { events: EventRow[] }) {
         const place = [event.location, countryName(event.country)].filter(Boolean).join(", ");
         const range = event.endsAt && formatDate(event.endsAt) !== formatDate(event.startsAt) ? `${formatDate(event.startsAt)} – ${formatDate(event.endsAt)}` : formatDate(event.startsAt, "long");
         return (
-          <li key={event.id} className="flex gap-4 rounded-xl border bg-card p-4 shadow-card">
+          <li key={event.id} className="flex gap-4 rounded-xl border bg-card p-4">
             <div className="flex size-14 shrink-0 flex-col items-center justify-center rounded-lg border bg-muted" aria-hidden="true">
               <span className="text-[10px] font-semibold uppercase tracking-wider text-primary">{MONTH.format(event.startsAt)}</span>
               <span className="text-lg font-semibold leading-none">{event.startsAt.getUTCDate()}</span>

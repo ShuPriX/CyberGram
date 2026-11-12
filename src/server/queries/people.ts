@@ -218,8 +218,9 @@ export async function listFollowers(userId: string, limit = 100): Promise<Person
     .limit(limit);
 }
 
-/** Member search for the global search page. Private profiles are not listed. */
-export async function searchPeople(q: string, limit = 20, excludeIds: string[] = []): Promise<PersonCard[]> {
+/** Member search for the global search page. Connections-only profiles are never listed. */
+export async function searchPeople(q: string, limit = 20, options: { signedIn?: boolean; excludeIds?: string[] } = {}): Promise<PersonCard[]> {
+  const { signedIn = false, excludeIds = [] } = options;
   const term = q.trim().slice(0, 80);
   if (term.length < 2) return [];
   const pattern = likePattern(term);
@@ -231,7 +232,8 @@ export async function searchPeople(q: string, limit = 20, excludeIds: string[] =
       and(
         eq(users.status, "active"),
         sql`${users.onboardedAt} is not null`,
-        ne(profiles.visibility, "private"),
+        // "Members only" profiles are searchable by members, never by anonymous visitors.
+        signedIn ? ne(profiles.visibility, "private") : eq(profiles.visibility, "public"),
         or(ilike(users.name, pattern), ilike(users.username, pattern), ilike(profiles.headline, pattern), ilike(profiles.currentCompany, pattern)),
         excludeIds.length > 0 ? notInArray(users.id, excludeIds) : undefined,
       ),

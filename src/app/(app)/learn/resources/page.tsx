@@ -54,7 +54,7 @@ export default async function ResourcesPage({ searchParams }: { searchParams: Pr
           )
         }
       />
-      <form action="/learn/resources" method="get" className="grid gap-3 rounded-xl border bg-card p-4 shadow-card sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr_auto]">
+      <form action="/learn/resources" method="get" className="grid gap-3 rounded-xl border bg-card p-4 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr_auto]">
         <Input name="q" type="search" defaultValue={filters.q ?? ""} maxLength={80} placeholder="Search resources" aria-label="Search resources" />
         <Select name="domain" defaultValue={filters.category ?? ""} aria-label="Domain">
           <option value="">Any domain</option>

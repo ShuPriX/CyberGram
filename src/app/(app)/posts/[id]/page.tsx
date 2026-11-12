@@ -36,7 +36,7 @@ export default async function PostPage({ params }: Props) {
   if (post.slug) redirect(`/articles/${post.slug}`);
 
   return (
-    <div className="mx-auto max-w-2xl space-y-4">
+    <div className="mx-auto w-full max-w-5xl space-y-4">
       <Link href={user ? "/feed" : "/explore"} className="inline-flex items-center gap-1.5 text-[13px] font-medium text-muted-foreground hover:text-foreground">
         <ArrowLeft className="size-4" /> {user ? "Back to feed" : "Explore more"}
       </Link>

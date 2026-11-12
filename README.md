@@ -63,19 +63,25 @@ Set `SEED_DEMO_PASSWORD` first. Demo members and organisations carry “(Demo)�
 
 ## Keeping jobs current
 
-Listings reach the hub three ways: organisations post them, administrators connect employer job boards under **Admin → Job sources**, and members submit roles that a moderator checks against the employer's posting.
+The jobs section fills and refreshes on its own; no organisation has to register. Listings reach the hub three ways:
 
-Scheduled work must run at least once a day. Use either:
+- **Employer job boards (automatic).** `src/db/seed/sources.ts` lists about a hundred employers' public job boards, read through the public job-board APIs of Greenhouse, Lever and Ashby. They are installed by `npm run db:seed`, re-read every twelve hours, and only security practitioner roles are kept (sales, marketing and similar roles at security vendors are filtered out). Manage them under **Admin → Job sources**.
+- **Organisations** that register can post roles directly and track applicants.
+- **Members** can submit a role they found; a moderator checks it against the employer's posting.
 
-- **An external scheduler** calling the endpoint (recommended for multi-instance deployments):
-  ```bash
-  curl -X POST -H "Authorization: Bearer $CRON_SECRET" https://your-host/api/cron/daily
-  ```
-- **The in-process scheduler** for a single instance: set `ENABLE_INTERNAL_SCHEDULER=true`.
+Run `npm run jobs:sync` once after seeding to fill the board immediately. After that the built-in scheduler keeps it current: it is on by default (`ENABLE_INTERNAL_SCHEDULER=true`) and checks every 15 minutes for sources that are due. When running several instances, turn it off and call the endpoint from an external scheduler instead:
+
+```bash
+curl -X POST -H "Authorization: Bearer $CRON_SECRET" https://your-host/api/cron/daily
+```
 
 Each run synchronises sources that are due, closes roles that have disappeared from their source or passed their deadline, sends job alerts and purges expired sessions and tokens. Every step is idempotent, so running it hourly is safe.
 
-Only add sources you are permitted to use. Each source records its authorisation basis, and imported listings always link back to the original posting.
+Only add sources you are permitted to use. Each source records its authorisation basis, nothing is scraped from web pages, and imported listings always link back to the employer's own posting.
+
+## Design
+
+Black, diamond white and signal orange, with hard edges and no gradients, blur or drop shadows on cards. Headings use Chakra Petch, text uses IBM Plex Sans and labels use JetBrains Mono; the fonts are downloaded at build time and served from the app's own origin. Black is the default theme and the diamond-white theme is one click away in the header. Colour tokens live at the top of `src/app/globals.css`.
 
 ## Production checklist
 

@@ -14,7 +14,7 @@ export default async function NewCompanyPage() {
   await requireOnboardedUser();
   const categories = await getActiveCategories();
   return (
-    <div className="mx-auto max-w-3xl space-y-5">
+    <div className="mx-auto w-full max-w-6xl space-y-5">
       <PageHeader title="Add your organisation" description="Create a page for your company or security team to publish roles, share updates and review applicants." />
       <Card>
         <CardContent className="flex items-start gap-3 text-[13px] leading-relaxed text-muted-foreground">
