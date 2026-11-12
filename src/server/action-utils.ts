@@ -27,7 +27,12 @@ export class ActionError extends Error {
   }
 }
 
-export const fail = (error: string, fieldErrors?: Record<string, string>): ActionState => ({ ok: false, error, fieldErrors });
+/** Typed narrowly (not as `ActionState<unknown>`) so it is assignable to any action's result. */
+export const fail = (error: string, fieldErrors?: Record<string, string>): { ok: false; error: string; fieldErrors?: Record<string, string> } => ({
+  ok: false,
+  error,
+  fieldErrors,
+});
 export const ok = <T>(message?: string, data?: T): ActionState<T> => ({ ok: true, message, data });
 
 type BaseOptions<S extends z.ZodType> = {

@@ -234,7 +234,7 @@ export async function listJobs(filters: JobFilters = {}): Promise<JobList> {
 /** Jobs by their ids, preserving the given order. Used for saved lists and alerts. */
 export async function listJobsByIds(ids: string[], viewerId?: string | null): Promise<JobListItem[]> {
   if (ids.length === 0) return [];
-  const rows = await db.select(listColumns).from(jobs).leftJoin(companies, eq(jobs.companyId, companies.id)).where(inArray(jobs.id, ids));
+  const rows = await listQuery().where(inArray(jobs.id, ids));
   const decorated = await decorateJobs(rows, viewerId);
   const byId = new Map(decorated.map((j) => [j.id, j]));
   return ids.map((id) => byId.get(id)).filter((j): j is JobListItem => Boolean(j));

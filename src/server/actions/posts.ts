@@ -119,7 +119,7 @@ const createPostSchema = z.object({
   companyId: zOptionalId,
 });
 
-export const createPostAction = formAction({ schema: createPostSchema, rateLimit: "post" }, async (input, { user }) => {
+export const createPostAction = formAction<typeof createPostSchema, FeedPost | null>({ schema: createPostSchema, rateLimit: "post" }, async (input, { user }) => {
   if (!(await isValidCategory(input.category))) return fail("Please choose a category.", { category: "Choose a category." });
   await assertNotSpam(user.id, input.body);
 
@@ -213,7 +213,7 @@ export const createPostAction = formAction({ schema: createPostSchema, rateLimit
 
 const updatePostSchema = z.object({ id: zId, body: zText(LIMITS.postBody), category: zInline(60) });
 
-export const updatePostAction = formAction({ schema: updatePostSchema, rateLimit: "post" }, async (input, { user }) => {
+export const updatePostAction = formAction<typeof updatePostSchema, FeedPost | null>({ schema: updatePostSchema, rateLimit: "post" }, async (input, { user }) => {
   if (!(await isValidCategory(input.category))) return fail("Please choose a category.", { category: "Choose a category." });
   const [updated] = await db
     .update(posts)
@@ -363,7 +363,7 @@ export const repostAction = callAction({ schema: repostSchema, rateLimit: "post"
 
 const commentSchema = z.object({ postId: zId, parentId: zOptionalId, body: zText(LIMITS.commentBody) });
 
-export const addCommentAction = formAction({ schema: commentSchema, rateLimit: "comment" }, async (input, { user }) => {
+export const addCommentAction = formAction<typeof commentSchema, CommentItem>({ schema: commentSchema, rateLimit: "comment" }, async (input, { user }) => {
   const post = await visiblePost(input.postId, user);
   if (!post) return fail("That post is not available.");
 
@@ -512,7 +512,7 @@ const articleSchema = z.object({
   coverFileId: zOptionalId,
 });
 
-export const saveArticleAction = formAction({ schema: articleSchema, rateLimit: "post" }, async (input, { user }) => {
+export const saveArticleAction = formAction<typeof articleSchema, { slug: string }>({ schema: articleSchema, rateLimit: "post" }, async (input, { user }) => {
   if (!(await isValidCategory(input.category))) return fail("Please choose a category.", { category: "Choose a category." });
 
   if (input.coverFileId) {

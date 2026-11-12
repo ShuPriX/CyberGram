@@ -8,6 +8,11 @@ const eslintConfig = [
     ignores: [".next/**", "out/**", "build/**", "drizzle/**", ".data/**", "next-env.d.ts"],
   },
   {
+    // CommonJS by necessity: this file is preloaded with `node --require`.
+    files: ["scripts/**/*.cjs"],
+    rules: { "@typescript-eslint/no-require-imports": "off" },
+  },
+  {
     rules: {
       // User media is resized and re-encoded at upload time and served from our own
       // authenticated file route, so plain <img> is the right primitive for it.

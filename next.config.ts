@@ -1,6 +1,12 @@
 import type { NextConfig } from "next";
 
 const isProd = process.env.NODE_ENV === "production";
+/**
+ * Set by `scripts/next.mjs` when the project lives on a filesystem without symlink or junction
+ * support (exFAT, FAT32, some network shares). Module resolution then skips symlink lookups,
+ * which otherwise fail there with EISDIR.
+ */
+const noSymlinks = process.env.NEXT_NO_SYMLINKS === "1";
 
 /**
  * Static security headers applied to every response.
@@ -42,6 +48,16 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "1mb",
     },
   },
+  ...(noSymlinks
+    ? {
+        webpack(config: { resolve: { symlinks?: boolean }; cache?: unknown }) {
+          config.resolve.symlinks = false;
+          // The on-disk build cache cannot snapshot dependencies on these filesystems; keep it in memory.
+          config.cache = { type: "memory" };
+          return config;
+        },
+      }
+    : {}),
   async headers() {
     return [
       { source: "/(.*)", headers: securityHeaders },

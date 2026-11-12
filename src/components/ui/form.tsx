@@ -1,6 +1,7 @@
 "use client";
 
 import { CircleAlert } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { createContext, startTransition, use, useActionState, useEffect, useId, useRef } from "react";
 import type * as React from "react";
 import type { ActionState } from "@/server/action-utils";
@@ -28,6 +29,8 @@ type ActionFormProps<T> = Omit<React.ComponentProps<"form">, "action" | "onSubmi
   onSuccess?: (data: T | undefined) => void;
   /** Clear the fields after a successful submission (composers, add-item forms). */
   resetOnSuccess?: boolean;
+  /** Re-render the current route's server components after success (lists, counters). */
+  refresh?: boolean;
 };
 
 /**
@@ -37,8 +40,9 @@ type ActionFormProps<T> = Omit<React.ComponentProps<"form">, "action" | "onSubmi
  * typed (React resets uncontrolled forms after an `action` completes). Field-level errors,
  * the pending state and success toasts are provided to descendants through context.
  */
-export function ActionForm<T = unknown>({ action, onSuccess, resetOnSuccess = false, children, ...props }: ActionFormProps<T>) {
+export function ActionForm<T = unknown>({ action, onSuccess, resetOnSuccess = false, refresh = false, children, ...props }: ActionFormProps<T>) {
   const [state, dispatch, pending] = useActionState<ActionState<T>, FormData>(action, null);
+  const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
   const handled = useRef<ActionState<T>>(null);
   const onSuccessRef = useRef(onSuccess);
@@ -52,13 +56,14 @@ export function ActionForm<T = unknown>({ action, onSuccess, resetOnSuccess = fa
     if (state.ok) {
       if (state.message) toast.success(state.message);
       if (resetOnSuccess) formRef.current?.reset();
+      if (refresh) router.refresh();
       onSuccessRef.current?.(state.data);
     } else {
       // Move focus to the first invalid field so keyboard and screen-reader users land on it.
       const firstInvalid = formRef.current?.querySelector<HTMLElement>('[aria-invalid="true"]');
       firstInvalid?.focus();
     }
-  }, [state, resetOnSuccess]);
+  }, [state, resetOnSuccess, refresh, router]);
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
