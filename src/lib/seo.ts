@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import { APP_ORIGIN } from "./app-url";
 import { APP_NAME } from "./constants";
 
 /** Public origin, without a trailing slash. Safe to use in server components and metadata. */
-export const SITE_URL = (process.env.APP_URL ?? "http://localhost:3000").replace(/\/+$/, "");
+export const SITE_URL = APP_ORIGIN;
 
 export function absoluteUrl(path = "/"): string {
   return `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;

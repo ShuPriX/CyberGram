@@ -29,7 +29,7 @@ type Instance = { db: DB; close: () => Promise<void> };
 const globalStore = globalThis as unknown as { __cybergramDb?: Instance };
 
 function embeddedDir(): string {
-  return path.resolve(process.cwd(), env.PGLITE_DIR ?? ".data/pglite");
+  return path.resolve(/* turbopackIgnore: true */ process.cwd(), env.PGLITE_DIR ?? ".data/pglite");
 }
 
 /**

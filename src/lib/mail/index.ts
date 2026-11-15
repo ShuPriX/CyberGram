@@ -7,7 +7,7 @@ import { newId } from "@/lib/ids";
 export type MailMessage = { to: string; subject: string; text: string; html: string };
 export type StoredMail = MailMessage & { id: string; createdAt: string };
 
-const OUTBOX_DIR = path.resolve(process.cwd(), ".data/outbox");
+const OUTBOX_DIR = path.resolve(/* turbopackIgnore: true */ process.cwd(), ".data/outbox");
 
 /** True when mail is captured locally instead of being delivered (development without SMTP). */
 export const usesDevOutbox = !env.SMTP_URL && !env.isProd;

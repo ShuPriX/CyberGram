@@ -29,7 +29,7 @@ function assertKey(key: string) {
 }
 
 class LocalStorage implements StorageDriver {
-  private readonly root = path.resolve(process.cwd(), ".data/uploads");
+  private readonly root = path.resolve(/* turbopackIgnore: true */ process.cwd(), ".data/uploads");
 
   private resolve(key: string): string {
     assertKey(key);

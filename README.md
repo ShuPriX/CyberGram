@@ -94,6 +94,33 @@ Following is one-way and needs no approval. A direct message can only be started
 
 Black, diamond white and signal orange, with hard edges and no gradients, blur or drop shadows on cards. Headings use Chakra Petch, text uses IBM Plex Sans and labels use JetBrains Mono; the fonts are downloaded at build time and served from the app's own origin. Black is the default theme and the diamond-white theme is one click away in the header. Colour tokens live at the top of `src/app/globals.css`.
 
+## Deploying
+
+The app is a Node.js server, so it runs on a Node host with Cloudflare in front for DNS, caching and the firewall. The repository includes a `Dockerfile` and a Render blueprint (`render.yaml`); any container host works the same way.
+
+**1. Deploy the app (Render)**
+
+1. In the Render dashboard choose **New → Blueprint**, connect this repository and apply it.
+2. When asked, enter `SEED_ADMIN_EMAIL` and `SEED_ADMIN_PASSWORD` (at least 10 characters). This becomes the administrator account.
+3. Wait for the first deploy. The site is live at `https://<service>.onrender.com`: the database is migrated, reference data and job sources are installed, and the first job and news sync start within a minute.
+4. Sign in as the administrator, then delete `SEED_ADMIN_PASSWORD` from the service's environment.
+
+The free plan sleeps when idle, so job and news refreshes only run while it is awake, and its 512 MB of memory is tight for the largest job boards. A paid instance avoids both.
+
+**2. Put it behind Cloudflare**
+
+1. Add your domain to Cloudflare and switch the domain's nameservers to the ones Cloudflare gives you.
+2. In Render, open the service → **Settings → Custom Domains** and add your domain.
+3. In Cloudflare **DNS**, add a `CNAME` record for the domain pointing at `<service>.onrender.com`. Leave it **DNS only** until Render shows the domain as verified with a certificate, then turn the proxy on.
+4. In Cloudflare **SSL/TLS**, set the mode to **Full (strict)**.
+5. In Render, set `APP_URL=https://your-domain` and `TRUSTED_PROXY_HOPS=2`, then redeploy.
+
+**3. Make it production-ready**
+
+- **Email:** set `SMTP_URL` and `EMAIL_FROM` from any SMTP provider. Without them, verification and password-reset emails are not delivered.
+- **Uploads:** the container's disk is wiped on every deploy. Create a Cloudflare R2 bucket and an R2 API token, then set `STORAGE_DRIVER=s3`, `S3_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com`, `S3_REGION=auto`, `S3_BUCKET`, `S3_ACCESS_KEY_ID` and `S3_SECRET_ACCESS_KEY`.
+- **Sign-in with GitHub or Google:** set the OAuth client values from `.env.example`; the callback URLs are listed there.
+
 ## Production checklist
 
 - `APP_URL` is `https://…` and `APP_SECRET` is at least 32 random characters. The server refuses to start otherwise.

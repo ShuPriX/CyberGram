@@ -12,6 +12,19 @@ async function boot(): Promise<void> {
   if (env.isEmbeddedDb || env.AUTO_MIGRATE) {
     await runMigrations();
     if (await needsBaseSeed()) await seedBase();
+
+    // First deployment: create the administrator named in the environment. An account that
+    // already exists is left untouched, so this is safe on every start and the password
+    // variable can be removed once the administrator has signed in.
+    if (process.env.SEED_ADMIN_EMAIL && process.env.SEED_ADMIN_PASSWORD) {
+      try {
+        const { seedAdmin } = await import("@/db/seed/admin");
+        const admin = await seedAdmin();
+        if (admin.created) console.info(`[boot] administrator account created for ${admin.email}`);
+      } catch (err) {
+        console.error("[boot] could not create the administrator account:", err instanceof Error ? err.message : err);
+      }
+    }
   }
 
   if (env.isProd && !env.SMTP_URL) {

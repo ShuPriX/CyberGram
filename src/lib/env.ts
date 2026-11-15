@@ -1,5 +1,6 @@
 import "server-only";
 import { z } from "zod";
+import { APP_ORIGIN } from "./app-url";
 
 /**
  * Validated, typed server configuration.
@@ -55,7 +56,8 @@ const schema = z.object({
   ALLOW_LOCAL_FEEDS: flag(false),
 });
 
-const parsed = schema.safeParse(process.env);
+// A platform-assigned address stands in for APP_URL until a custom domain is configured.
+const parsed = schema.safeParse({ ...process.env, APP_URL: APP_ORIGIN });
 if (!parsed.success) {
   const details = parsed.error.issues.map((i) => `  • ${i.path.join(".")}: ${i.message}`).join("\n");
   throw new Error(`Invalid environment configuration:\n${details}`);

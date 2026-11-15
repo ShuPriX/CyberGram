@@ -3,7 +3,7 @@ import path from "node:path";
 import { env } from "@/lib/env";
 import { db } from "./index";
 
-const migrationsFolder = path.resolve(process.cwd(), "drizzle");
+const migrationsFolder = path.resolve(/* turbopackIgnore: true */ process.cwd(), "drizzle");
 
 /** Applies any pending SQL migrations from ./drizzle. Safe to call repeatedly. */
 export async function runMigrations(): Promise<void> {
