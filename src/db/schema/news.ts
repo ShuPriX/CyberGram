@@ -4,9 +4,10 @@ import { createdAt, pk, tstz } from "./_shared";
 export type NewsSourceKind = "official" | "research" | "press";
 
 /**
- * Headlines collected from a fixed list of established security sources (see
- * `lib/news/sources`). Only the headline, a short excerpt and the link are kept: the article
- * itself always lives, and is read, at its publisher.
+ * Ledger of headlines collected from a fixed list of established security sources (see
+ * `lib/news/sources`). Only the headline and a short excerpt are kept. Each one is published
+ * to the feed once, as a post from the platform's news account; the stored link is what
+ * prevents the same story from being collected twice.
  */
 export const newsItems = pgTable(
   "news_items",
@@ -21,6 +22,8 @@ export const newsItems = pgTable(
     url: text("url").notNull(),
     excerpt: text("excerpt"),
     publishedAt: tstz("published_at").notNull(),
+    /** When the headline was published to the feed as a post. Null until then; never reset, so nothing is posted twice. */
+    postedAt: tstz("posted_at"),
     createdAt: createdAt(),
   },
   (t) => [uniqueIndex("news_items_url_uq").on(t.url), index("news_items_published_idx").on(t.publishedAt), index("news_items_source_idx").on(t.source, t.publishedAt)],

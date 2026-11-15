@@ -509,4 +509,5 @@ export const RESERVED_USERNAMES = new Set([
   "moderator", "mod", "official", "verified", "cybergram", "cyber-gram", "api", "www", "mail", "null",
   "undefined", "me", "you", "settings", "login", "register", "about", "contact", "jobs", "feed", "explore",
   "privacy", "terms", "legal", "press", "careers", "status", "recruiter", "billing", "noreply", "no-reply",
+  "news", "news-desk", "newsdesk",
 ]);

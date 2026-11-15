@@ -50,6 +50,13 @@ services:
       - key: TRUSTED_PROXY_HOPS
         value: "1"
 
+      # Sign in with Google. Create an OAuth client in Google Cloud Console and paste the two
+      # values here; the button appears on the sign-in page once both are set.
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+
       # Add these in the dashboard when you are ready (see the README):
       #   APP_URL                 https://your-domain  (once the custom domain is live)
       #   SMTP_URL, EMAIL_FROM    so verification and password-reset emails are delivered

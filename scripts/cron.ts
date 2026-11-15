@@ -37,7 +37,7 @@ async function main() {
   if (mode === "news") {
     const { syncNews } = await import("../src/server/services/news-sync");
     const report = await syncNews();
-    console.log(`✓ News desk: ${report.added} new headlines from ${report.sources} sources.`);
+    console.log(`✓ News desk: ${report.added} new headlines from ${report.sources} sources, ${report.posted} published to the feed.`);
     for (const failure of report.failed) console.error(`✗ ${failure}`);
     await closeDb();
     return;

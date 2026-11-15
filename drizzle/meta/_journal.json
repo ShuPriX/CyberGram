@@ -15,6 +15,13 @@
       "when": 1794744690344,
       "tag": "0001_news_and_messaging",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794746924145,
+      "tag": "0002_news_posted_at",
+      "breakpoints": true
     }
   ]
 }

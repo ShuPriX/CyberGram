@@ -3,7 +3,6 @@ import { Award, Bookmark, BriefcaseBusiness, Building2, Check, FileText, UserRou
 import Link from "next/link";
 import { FeedList } from "@/components/feed/feed-list";
 import { FeedRefresher } from "@/components/feed/feed-refresher";
-import { NewsBrief, NewsList } from "@/components/feed/news";
 import { SuggestedPeopleCard, TrendingTagsCard } from "@/components/feed/rails";
 import { JobBoardCard } from "@/components/jobs/job-board-card";
 import { SideLink } from "@/components/layout/nav-link";
@@ -19,7 +18,7 @@ import { NEWS_SOURCES } from "@/lib/news/sources";
 import { privateMetadata } from "@/lib/seo";
 import { cn, formatCount } from "@/lib/utils";
 import { getMemberCompanies } from "@/server/queries/companies";
-import { listNews } from "@/server/queries/news";
+import { getNewsAccountId } from "@/server/services/news-sync";
 import { getFeed, type FeedMode } from "@/server/queries/posts";
 import { getActiveCategories } from "@/server/queries/taxonomy";
 
@@ -39,15 +38,17 @@ export default async function FeedPage({ searchParams }: { searchParams: Promise
   const mode = POST_TABS.find((t) => t.value === tab)?.value ?? "for-you";
   const viewer = { id: user.id, role: user.role };
 
-  const [[profile], categories, companies, [experienceCount], [certificationCount], news] = await Promise.all([
+  const [[profile], categories, companies, [experienceCount], [certificationCount], newsAccountId] = await Promise.all([
     db.select().from(profiles).where(eq(profiles.userId, user.id)).limit(1),
     getActiveCategories(),
     getMemberCompanies(user.id),
     db.select({ value: count() }).from(experiences).where(eq(experiences.userId, user.id)),
     db.select({ value: count() }).from(achievements).where(and(eq(achievements.userId, user.id), eq(achievements.type, "certification"))),
-    listNews({ limit: showNews ? 40 : 5 }),
+    getNewsAccountId(),
   ]);
-  const initial = showNews ? null : await getFeed({ viewer, mode, interests: profile?.domains });
+  // The News tab is the same post stream, filtered to the platform's news account.
+  const newsFilter = showNews && newsAccountId ? { authorId: newsAccountId } : {};
+  const initial = await getFeed({ viewer, mode: showNews ? "latest" : mode, interests: profile?.domains, ...newsFilter });
   const categoryNames = Object.fromEntries(categories.map((c) => [c.slug, c.name]));
 
   // What a complete profile has. Each open item links to where it is filled in.
@@ -130,28 +131,26 @@ export default async function FeedPage({ searchParams }: { searchParams: Promise
         />
 
         {showNews ? (
+          <p className="font-mono text-[11px] leading-relaxed text-subtle">
+            Posted by CyberGram News from {NEWS_SOURCES.length} named sources — a national cyber agency, security research teams and established security press. New headlines
+            arrive every 30 minutes.
+          </p>
+        ) : null}
+        {/* Jobs sit inside the feed on small screens, where there is no side rail. */}
+        <JobBoardCard limit={4} viewerId={user.id} className="lg:hidden" />
+        {
           <>
-            <p className="font-mono text-[11px] leading-relaxed text-subtle">
-              Headlines from {NEWS_SOURCES.length} named sources — national cyber agencies, security research teams and established security press. Refreshed every 30 minutes.
-            </p>
-            <NewsList items={news} />
-          </>
-        ) : (
-          <>
-            {mode === "for-you" || mode === "latest" ? <NewsBrief items={news} /> : null}
-            {/* Jobs sit inside the feed on small screens, where there is no side rail. */}
-            <JobBoardCard limit={4} viewerId={user.id} className="lg:hidden" />
             <FeedList
               // Remounts when a refresh brings a newer post to the top, so the list starts from fresh data.
-              key={`${mode}:${initial?.posts[0]?.id ?? "empty"}`}
-              initial={initial ?? { posts: [], nextCursor: null }}
-              request={{ mode }}
+              key={`${showNews ? "news" : mode}:${initial.posts[0]?.id ?? "empty"}`}
+              initial={initial}
+              request={showNews ? { mode: "latest", ...newsFilter } : { mode }}
               context={{ viewer: { name: user.name, avatarFileId: user.avatarFileId }, categories: categoryNames }}
-              composer={{
-                categories,
-                defaultCategory: profile?.domains[0],
-                companies: companies.filter((c) => c.status === "active").map((c) => ({ id: c.id, name: c.name })),
-              }}
+              composer={
+                showNews
+                  ? undefined
+                  : { categories, defaultCategory: profile?.domains[0], companies: companies.filter((c) => c.status === "active").map((c) => ({ id: c.id, name: c.name })) }
+              }
               emptyTitle={mode === "following" ? "Your following feed is empty" : "No posts yet"}
               emptyDescription={
                 mode === "following"
@@ -165,7 +164,7 @@ export default async function FeedPage({ searchParams }: { searchParams: Promise
               }
             />
           </>
-        )}
+        }
       </div>
 
       <aside className="hidden min-w-0 space-y-4 lg:block">

@@ -84,7 +84,7 @@ Only add sources you are permitted to use. Each source records its authorisation
 
 The home page is the feed. Visitors see security headlines, public community posts and the live job board; members are taken to their own feed, where they can also post. The feed is fresh on every visit and re-fetches itself every 30 minutes while it is open.
 
-Headlines come from a fixed list of established sources in `src/lib/news/sources.ts` — a national cyber agency, security research teams and long-running security press. Only the headline, a short excerpt and the link are stored; each link is checked to be on the source's own domain, and the article is always read at the publisher. The built-in scheduler refreshes the desk every 30 minutes; `npm run news:sync` does it on demand.
+Security news appears in the feed as ordinary posts from a platform-run account, CyberGram News, so members can like, comment on, repost and share a headline like any other post. Headlines come from a fixed list of established sources in `src/lib/news/sources.ts` — a national cyber agency, security research teams and long-running security press. Only the headline and a short excerpt are stored; each post names its source and does not link out. The built-in scheduler collects new headlines every 30 minutes; `npm run news:sync` does it on demand.
 
 ## Messaging
 
@@ -119,7 +119,7 @@ The free plan sleeps when idle, so job and news refreshes only run while it is a
 
 - **Email:** set `SMTP_URL` and `EMAIL_FROM` from any SMTP provider. Without them, verification and password-reset emails are not delivered.
 - **Uploads:** the container's disk is wiped on every deploy. Create a Cloudflare R2 bucket and an R2 API token, then set `STORAGE_DRIVER=s3`, `S3_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com`, `S3_REGION=auto`, `S3_BUCKET`, `S3_ACCESS_KEY_ID` and `S3_SECRET_ACCESS_KEY`.
-- **Sign-in with GitHub or Google:** set the OAuth client values from `.env.example`; the callback URLs are listed there.
+- **Sign in with Google:** in Google Cloud Console create an OAuth client of type "Web application" with the redirect URI `https://your-domain/api/auth/google/callback`, then set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` on the service. The "Continue with Google" button appears on the sign-in and sign-up pages once both are set. GitHub works the same way with `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET`.
 
 ## Production checklist
 
