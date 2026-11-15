@@ -1,7 +1,9 @@
-import { eq, desc } from "drizzle-orm";
+import { and, eq, desc } from "drizzle-orm";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { CertificationFields } from "@/components/profile/achievements";
 import { EntryDialog } from "@/components/shared/entry-dialog";
+import { VerificationBadge } from "@/components/shared/fields";
 import { ChipGroup, SkillDatalist } from "@/components/shared/fields";
 import { ImageUpload } from "@/components/shared/image-upload";
 import { ActionButton } from "@/components/ui/action-button";
@@ -10,12 +12,12 @@ import { Section } from "@/components/ui/card";
 import { ActionForm, CheckboxField, FormError, InputField, SelectField, SubmitButton, TextareaField } from "@/components/ui/form";
 import { PageHeader } from "@/components/ui/misc";
 import { db } from "@/db";
-import { educations, experiences, profiles, projects } from "@/db/schema";
+import { achievements, educations, experiences, profiles, projects } from "@/db/schema";
 import { requireOnboardedUser } from "@/lib/auth/session";
 import { COUNTRIES, EMPLOYMENT_TYPES, LIMITS, OPEN_TO_WORK_VISIBILITIES, skillLabel, WORK_ARRANGEMENTS } from "@/lib/constants";
 import { privateMetadata } from "@/lib/seo";
 import { formatDate } from "@/lib/utils";
-import { deleteProfileItemAction, saveEducationAction, saveExperienceAction, saveProjectAction, updateProfileAction } from "@/server/actions/profile";
+import { deleteProfileItemAction, saveAchievementAction, saveEducationAction, saveExperienceAction, saveProjectAction, updateProfileAction } from "@/server/actions/profile";
 import { getActiveCategories } from "@/server/queries/taxonomy";
 
 export const metadata = privateMetadata("Edit profile");
@@ -71,7 +73,7 @@ function ProjectFields({ item }: { item?: Project }) {
   );
 }
 
-function RowActions({ kind, id, edit }: { kind: "experience" | "education" | "project"; id: string; edit: React.ReactNode }) {
+function RowActions({ kind, id, edit }: { kind: "experience" | "education" | "project" | "achievement"; id: string; edit: React.ReactNode }) {
   return (
     <div className="flex shrink-0 items-center gap-1">
       {edit}
@@ -84,12 +86,13 @@ function RowActions({ kind, id, edit }: { kind: "experience" | "education" | "pr
 
 export default async function EditProfilePage() {
   const user = await requireOnboardedUser();
-  const [[profile], categories, experienceRows, educationRows, projectRows] = await Promise.all([
+  const [[profile], categories, experienceRows, educationRows, projectRows, certificationRows] = await Promise.all([
     db.select().from(profiles).where(eq(profiles.userId, user.id)).limit(1),
     getActiveCategories(),
     db.select().from(experiences).where(eq(experiences.userId, user.id)).orderBy(desc(experiences.isCurrent), desc(experiences.startDate)),
     db.select().from(educations).where(eq(educations.userId, user.id)).orderBy(desc(educations.endYear)),
     db.select().from(projects).where(eq(projects.userId, user.id)).orderBy(desc(projects.createdAt)),
+    db.select().from(achievements).where(and(eq(achievements.userId, user.id), eq(achievements.type, "certification"))).orderBy(desc(achievements.achievedOn), desc(achievements.createdAt)),
   ]);
   if (!profile) return null;
 
@@ -156,6 +159,7 @@ export default async function EditProfilePage() {
       </Section>
 
       <Section
+        id="experience"
         title="Experience"
         action={
           <EntryDialog trigger={<><Plus /> Add</>} title="Add experience" action={saveExperienceAction}>
@@ -188,6 +192,51 @@ export default async function EditProfilePage() {
             ))}
           </ul>
         )}
+      </Section>
+
+      <Section
+        id="certifications"
+        title="Licenses & certifications"
+        description="Shown on your profile as self-reported until a moderator has checked the credential link."
+        action={
+          <EntryDialog trigger={<><Plus /> Add</>} title="Add a certification" action={saveAchievementAction}>
+            <CertificationFields />
+          </EntryDialog>
+        }
+      >
+        {certificationRows.length === 0 ? (
+          <p className="text-[13px] text-muted-foreground">Add the certifications you hold — OSCP, CEH, Security+, CISSP and so on — with a link to the credential.</p>
+        ) : (
+          <ul className="divide-y">
+            {certificationRows.map((item) => (
+              <li key={item.id} className="flex items-start justify-between gap-3 py-3 first:pt-0 last:pb-0">
+                <div className="min-w-0">
+                  <p className="flex flex-wrap items-center gap-2 text-[14px] font-semibold">
+                    {item.title} <VerificationBadge status={item.verificationStatus} />
+                  </p>
+                  <p className="text-[13px] text-muted-foreground">
+                    {[item.issuer, item.achievedOn ? `Issued ${formatDate(item.achievedOn, "monthYear")}` : null, item.expiresOn ? `Expires ${formatDate(item.expiresOn, "monthYear")}` : null]
+                      .filter(Boolean)
+                      .join(" · ") || "No details added"}
+                  </p>
+                </div>
+                <RowActions
+                  kind="achievement"
+                  id={item.id}
+                  edit={
+                    <EntryDialog trigger={<Pencil />} aria-label="Edit" variant="ghost" buttonSize="icon-sm" title="Edit certification" action={saveAchievementAction}>
+                      <CertificationFields certification={item} />
+                    </EntryDialog>
+                  }
+                />
+              </li>
+            ))}
+          </ul>
+        )}
+        <p className="mt-4 text-xs text-muted-foreground">
+          CTF results, CVEs, bounties, talks and publications are added under{" "}
+          <Link href="/achievements" className="font-medium text-primary hover:underline">Achievements</Link>, where you can also request verification.
+        </p>
       </Section>
 
       <Section

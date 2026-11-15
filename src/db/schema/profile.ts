@@ -54,7 +54,8 @@ export const profiles = pgTable(
     indexable: boolean("indexable").notNull().default(true),
     /** Opt-in: appear in candidate discovery for recruiters at verified companies. */
     recruiterDiscoverable: boolean("recruiter_discoverable").notNull().default(false),
-    messagePolicy: text("message_policy").$type<MessagePolicy>().notNull().default("everyone"),
+    /** Direct messages always require an accepted connection; `none` additionally closes the inbox. */
+    messagePolicy: text("message_policy").$type<MessagePolicy>().notNull().default("connections"),
     showEmail: boolean("show_email").notNull().default(false),
 
     notificationPrefs: jsonb("notification_prefs").$type<NotificationPrefs>().notNull().default({}),

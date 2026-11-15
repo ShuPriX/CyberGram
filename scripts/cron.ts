@@ -6,6 +6,7 @@ import "./_env";
  *
  *   npm run cron:daily     job-feed sync, listing expiry, job alerts and housekeeping
  *   npm run jobs:sync      synchronise every enabled job source now, ignoring schedules
+ *   npm run news:sync      refresh the security news desk now
  */
 async function main() {
   const mode = process.argv[2] ?? "daily";
@@ -33,7 +34,16 @@ async function main() {
     return;
   }
 
-  if (mode !== "daily") throw new Error(`Unknown mode "${mode}". Use "daily" or "sync".`);
+  if (mode === "news") {
+    const { syncNews } = await import("../src/server/services/news-sync");
+    const report = await syncNews();
+    console.log(`✓ News desk: ${report.added} new headlines from ${report.sources} sources.`);
+    for (const failure of report.failed) console.error(`✗ ${failure}`);
+    await closeDb();
+    return;
+  }
+
+  if (mode !== "daily") throw new Error(`Unknown mode "${mode}". Use "daily", "sync" or "news".`);
   const { runScheduledWork } = await import("../src/server/services/scheduled-work");
   const report = await runScheduledWork("schedule");
   console.log(

@@ -6,3 +6,4 @@ export * from "./community";
 export * from "./content";
 export * from "./social";
 export * from "./jobs";
+export * from "./news";

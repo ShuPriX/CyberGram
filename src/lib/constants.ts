@@ -257,9 +257,10 @@ export const PROFILE_VISIBILITIES = [
 ] as const;
 export type ProfileVisibility = (typeof PROFILE_VISIBILITIES)[number]["value"];
 
+// Starting a conversation always requires an accepted connection request (see
+// `server/services/messaging`). A member can additionally close their inbox to new conversations.
 export const MESSAGE_POLICIES = [
-  { value: "everyone", label: "Any member" },
-  { value: "connections", label: "Connections only" },
+  { value: "connections", label: "My connections" },
   { value: "none", label: "No one" },
 ] as const;
 export type MessagePolicy = (typeof MESSAGE_POLICIES)[number]["value"];

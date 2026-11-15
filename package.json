@@ -20,7 +20,8 @@
     "db:purge-demo": "tsx --conditions=react-server scripts/seed.ts --purge-demo",
     "db:studio": "drizzle-kit studio",
     "cron:daily": "tsx --conditions=react-server scripts/cron.ts daily",
-    "jobs:sync": "tsx --conditions=react-server scripts/cron.ts sync"
+    "jobs:sync": "tsx --conditions=react-server scripts/cron.ts sync",
+    "news:sync": "tsx --conditions=react-server scripts/cron.ts news"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.16",

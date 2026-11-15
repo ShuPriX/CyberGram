@@ -8,6 +8,7 @@ import { requireOnboardedUser } from "@/lib/auth/session";
 import { privateMetadata } from "@/lib/seo";
 import { listConversations } from "@/server/queries/messages";
 import { pairKey } from "@/server/queries/people";
+import { messagingGate } from "@/server/services/messaging";
 
 export const metadata = privateMetadata("Messages");
 
@@ -29,14 +30,15 @@ export default async function MessagesPage({ searchParams }: { searchParams: Pro
     .where(and(eq(users.id, to), eq(users.status, "active")))
     .limit(1);
   if (!recipient) return <MessagesShell conversations={list} />;
+  const gate = await messagingGate(user, recipient);
 
   return (
     <MessagesShell conversations={list} other={recipient}>
       <MessageThread
         recipientId={recipient.id}
         initial={[]}
-        canReply={recipient.messagePolicy !== "none"}
-        disabledReason={`${recipient.name} is not accepting new messages.`}
+        canReply={gate.allowed}
+        disabledReason={gate.allowed ? undefined : gate.reason}
       />
     </MessagesShell>
   );

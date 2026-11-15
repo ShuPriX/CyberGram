@@ -4,15 +4,15 @@ import { and, eq, isNull, lt, or, sql } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db";
 import { companies, companyFollows, connections, conversationParticipants, conversations, follows, messages, notifications, profiles, users } from "@/db/schema";
-import { can } from "@/lib/auth/permissions";
 import { getSession } from "@/lib/auth/session";
 import { LIMITS } from "@/lib/constants";
 import { excerptOf } from "@/lib/text";
 import { zBool, zId, zOptionalId, zOptionalText, zText } from "@/lib/validation";
 import { callAction, fail, formAction, ok } from "@/server/action-utils";
 import { getMessagesAfter, type MessageItem } from "@/server/queries/messages";
-import { isVerifiedRecruiter, pairKey } from "@/server/queries/people";
+import { pairKey } from "@/server/queries/people";
 import { bumpProfileCounter } from "@/server/services/access";
+import { messagingGate } from "@/server/services/messaging";
 import { notify } from "@/server/services/notify";
 
 const DAY = 24 * 60 * 60 * 1000;
@@ -164,8 +164,8 @@ export const removeConnectionAction = callAction({ schema: z.object({ id: zId })
 const messageSchema = z.object({ conversationId: zOptionalId, recipientId: zOptionalId, body: zText(LIMITS.messageBody) });
 
 /**
- * Sends a direct message. Starting a conversation is subject to the recipient's message
- * policy; replying inside an existing conversation is always allowed for its participants.
+ * Sends a direct message. Starting a conversation requires an accepted connection (see
+ * `messagingGate`); replying inside an existing conversation is always allowed for its participants.
  */
 export type SentMessage = { conversationId: string; isNew: boolean; message: MessageItem };
 
@@ -196,15 +196,11 @@ export const sendMessageAction = formAction<typeof messageSchema, SentMessage>({
 
   let recruiterOutreach = false;
   if (!conversationId) {
-    const [connection] = await db.select({ status: connections.status }).from(connections).where(eq(connections.pairKey, key)).limit(1);
-    const connected = connection?.status === "accepted";
-    const policy = recipient.messagePolicy ?? "everyone";
-    if (!can(user.role, "moderate:content")) {
-      if (policy === "none") return fail(`${recipient.name} is not accepting new messages.`);
-      if (policy === "connections" && !connected) return fail(`${recipient.name} only accepts messages from connections. Send a connection request first.`);
-    }
+    // A conversation can only be opened with someone who accepted a connection request.
+    const gate = await messagingGate(user, recipient);
+    if (!gate.allowed) return fail(gate.reason);
     if (!user.emailVerified) return fail("Verify your email address before starting new conversations.");
-    recruiterOutreach = !connected && (await isVerifiedRecruiter(user.id));
+    recruiterOutreach = gate.viaApplication;
 
     const [created] = await db.insert(conversations).values({ pairKey: key }).onConflictDoNothing().returning({ id: conversations.id });
     if (created) {

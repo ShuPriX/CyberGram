@@ -60,6 +60,7 @@ Set `SEED_DEMO_PASSWORD` first. Demo members and organisations carry “(Demo)�
 | `npm run db:seed` | Reference data and the administrator account |
 | `npm run cron:daily` | Job-feed sync, listing expiry, job alerts, housekeeping |
 | `npm run jobs:sync` | Synchronise every enabled job source now |
+| `npm run news:sync` | Refresh the security news desk now |
 
 ## Keeping jobs current
 
@@ -78,6 +79,16 @@ curl -X POST -H "Authorization: Bearer $CRON_SECRET" https://your-host/api/cron/
 Each run synchronises sources that are due, closes roles that have disappeared from their source or passed their deadline, sends job alerts and purges expired sessions and tokens. Every step is idempotent, so running it hourly is safe.
 
 Only add sources you are permitted to use. Each source records its authorisation basis, nothing is scraped from web pages, and imported listings always link back to the employer's own posting.
+
+## Home feed and news desk
+
+The home page is the feed. Visitors see security headlines, public community posts and the live job board; members are taken to their own feed, where they can also post. The feed is fresh on every visit and re-fetches itself every 30 minutes while it is open.
+
+Headlines come from a fixed list of established sources in `src/lib/news/sources.ts` — a national cyber agency, security research teams and long-running security press. Only the headline, a short excerpt and the link are stored; each link is checked to be on the source's own domain, and the article is always read at the publisher. The built-in scheduler refreshes the desk every 30 minutes; `npm run news:sync` does it on demand.
+
+## Messaging
+
+Following is one-way and needs no approval. A direct message can only be started with someone who has accepted your connection request (the exceptions are platform staff, and a hiring team replying to someone who applied to one of its roles). Members can also close their inbox entirely in Settings → Privacy.
 
 ## Design
 

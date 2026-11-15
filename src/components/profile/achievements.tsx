@@ -79,6 +79,34 @@ export function AchievementItem({ achievement, actions }: { achievement: Achieve
   );
 }
 
+/** Focused form for a licence or certification. Saved as an achievement of type `certification`. */
+export function CertificationFields({ certification }: { certification?: Achievement }) {
+  return (
+    <>
+      {certification ? <input type="hidden" name="id" value={certification.id} /> : null}
+      <input type="hidden" name="type" value="certification" />
+      {certification?.featured ? <input type="hidden" name="featured" value="true" /> : null}
+      <InputField label="Certification" name="title" required maxLength={160} defaultValue={certification?.title} placeholder="OSCP, CEH, Security+, CISSP, eJPT…" />
+      <InputField label="Issuing organisation" name="issuer" optional maxLength={120} defaultValue={certification?.issuer ?? ""} placeholder="OffSec, EC-Council, CompTIA, ISC2…" />
+      <div className="grid gap-4 sm:grid-cols-2">
+        <InputField label="Issued" name="achievedOn" type="date" optional defaultValue={certification?.achievedOn ?? ""} />
+        <InputField label="Expires" name="expiresOn" type="date" optional defaultValue={certification?.expiresOn ?? ""} hint="Leave empty if it does not expire." />
+      </div>
+      <InputField label="Credential ID" name="credentialId" optional maxLength={80} defaultValue={certification?.metadata.credentialId ?? ""} />
+      <InputField
+        label="Credential link"
+        name="evidenceUrl"
+        type="url"
+        optional
+        maxLength={2048}
+        defaultValue={certification?.evidenceUrl ?? ""}
+        placeholder="https://www.credly.com/badges/…"
+        hint="The issuer's public verification page. Needed if you want the certification marked as verified."
+      />
+    </>
+  );
+}
+
 /** Form fields for adding or editing an achievement (used inside an EntryDialog). */
 export function AchievementFields({ achievement }: { achievement?: Achievement }) {
   return (

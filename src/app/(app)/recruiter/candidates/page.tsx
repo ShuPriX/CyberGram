@@ -1,7 +1,6 @@
 import { Lock, SearchX } from "lucide-react";
 import Link from "next/link";
 import { one, withParams, type RawParams } from "@/components/jobs/jobs-nav";
-import { MessageButton } from "@/components/people/person";
 import { SkillBadges, SkillDatalist } from "@/components/shared/fields";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -111,7 +110,9 @@ export default async function CandidatesPage({ searchParams }: { searchParams: P
                         {[candidate.location, countryName(candidate.country), candidate.yearsExperience !== null ? `${candidate.yearsExperience} yrs` : null].filter(Boolean).join(" · ")}
                       </p>
                     </div>
-                    <MessageButton userId={candidate.id} />
+                    <Button asChild variant="outline" size="sm">
+                      <Link href={`/u/${candidate.username}`}>View &amp; connect</Link>
+                    </Button>
                   </div>
                   <SkillBadges skills={candidate.skills} max={8} />
                 </CardContent>

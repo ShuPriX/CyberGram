@@ -80,7 +80,8 @@ export default async function ProfilePage({ params }: Props) {
               <>
                 <ConnectButton userId={user.id} name={user.name} relationship={relationship} />
                 <FollowButton userId={user.id} following={relationship.following} />
-                {profile.messagePolicy !== "none" ? <MessageButton userId={user.id} /> : null}
+                {/* Messaging opens once a connection request has been accepted. */}
+                {relationship.connection === "connected" && profile.messagePolicy !== "none" ? <MessageButton userId={user.id} /> : null}
                 <ProfileReport userId={user.id} />
               </>
             ) : (
@@ -157,6 +158,8 @@ export default async function ProfilePage({ params }: Props) {
     profile.twitterUrl && <ExternalLinkRow key="t" href={profile.twitterUrl} icon={<AtSign />} label="X / Twitter" />,
   ].filter(Boolean);
   const showEmail = profile.showEmail && viewer !== null;
+  const certifications = data.achievements.filter((a) => a.type === "certification");
+  const otherAchievements = data.achievements.filter((a) => a.type !== "certification");
 
   return (
     <div className="mx-auto grid max-w-[1600px] gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
@@ -192,27 +195,46 @@ export default async function ProfilePage({ params }: Props) {
           <Section title="About">
             <p className="text-[13px] text-muted-foreground">
               Tell people what you work on and what you are looking for.{" "}
-              <Link href="/profile/edit" className="font-medium text-primary hover:underline">Add a bio</Link>
+              <Link href="/profile/edit" className="font-medium text-primary hover:underline">Add a bio, your company and your role</Link>
             </p>
           </Section>
         ) : null}
 
-        {data.achievements.length > 0 || isSelf ? (
+        {certifications.length > 0 || isSelf ? (
+          <Section
+            title="Licenses & certifications"
+            action={isSelf ? <Button asChild variant="outline" size="sm"><Link href="/profile/edit#certifications">{certifications.length > 0 ? "Manage" : "Add"}</Link></Button> : undefined}
+          >
+            {certifications.length > 0 ? (
+              <ul className="space-y-5">
+                {certifications.map((certification) => (
+                  <li key={certification.id}>
+                    <AchievementItem achievement={certification} />
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-[13px] text-muted-foreground">Add the certifications you hold, with a link to each credential.</p>
+            )}
+          </Section>
+        ) : null}
+
+        {otherAchievements.length > 0 || isSelf ? (
           <Section
             title="Achievements"
             description="Self-reported unless marked verified. Verified items were checked by a moderator against their evidence link."
             action={isSelf ? <Button asChild variant="outline" size="sm"><Link href="/achievements">Manage</Link></Button> : undefined}
           >
-            {data.achievements.length > 0 ? (
+            {otherAchievements.length > 0 ? (
               <ul className="space-y-5">
-                {data.achievements.map((achievement) => (
+                {otherAchievements.map((achievement) => (
                   <li key={achievement.id}>
                     <AchievementItem achievement={achievement} />
                   </li>
                 ))}
               </ul>
             ) : (
-              <p className="text-[13px] text-muted-foreground">Add certifications, CTF placements, CVEs, bounties and talks — each with an evidence link.</p>
+              <p className="text-[13px] text-muted-foreground">Add CTF placements, CVEs, bounties, talks and publications — each with an evidence link.</p>
             )}
           </Section>
         ) : null}
