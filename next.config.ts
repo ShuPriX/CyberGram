@@ -43,6 +43,8 @@ const nextConfig: NextConfig = {
     "nodemailer",
     "ioredis",
   ],
+  // The social card route reads its fonts from disk; make sure the standalone build ships them.
+  outputFileTracingIncludes: { "/api/social/card/[id]": ["./src/assets/fonts/**"] },
   experimental: {
     serverActions: {
       bodySizeLimit: "1mb",

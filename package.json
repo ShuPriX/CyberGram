@@ -13,6 +13,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "node --conditions=react-server --import tsx --test \"tests/**/*.test.ts\"",
+    "social:post": "tsx --conditions=react-server scripts/cron.ts social",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx --conditions=react-server scripts/migrate.ts",
     "db:seed": "tsx --conditions=react-server scripts/seed.ts",

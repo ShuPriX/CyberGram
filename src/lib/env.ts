@@ -51,6 +51,13 @@ const schema = z.object({
   // external scheduler calls /api/cron/daily, or when running several instances.
   ENABLE_INTERNAL_SCHEDULER: flag(true),
 
+  // Automatic posting to the platform's Instagram account (see README → Instagram).
+  INSTAGRAM_USER_ID: optionalString,
+  INSTAGRAM_ACCESS_TOKEN: optionalString,
+  INSTAGRAM_POSTS_PER_DAY: z.preprocess(blankToUndefined, z.coerce.number().int().min(1).max(8).default(3)),
+  /** UTC hour from which the daily jobs digest may be posted. */
+  INSTAGRAM_JOBS_HOUR_UTC: z.preprocess(blankToUndefined, z.coerce.number().int().min(0).max(23).default(5)),
+
   TRUSTED_PROXY_HOPS: int(1),
   HIBP_CHECK: flag(true),
   ALLOW_LOCAL_FEEDS: flag(false),
@@ -99,6 +106,8 @@ export const env = {
     github: Boolean(raw.GITHUB_CLIENT_ID && raw.GITHUB_CLIENT_SECRET),
     google: Boolean(raw.GOOGLE_CLIENT_ID && raw.GOOGLE_CLIENT_SECRET),
   },
+  /** True when an Instagram account is connected, which turns automatic posting on. */
+  instagram: Boolean(raw.INSTAGRAM_USER_ID && raw.INSTAGRAM_ACCESS_TOKEN),
 } as const;
 
 export type Env = typeof env;

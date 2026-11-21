@@ -7,6 +7,7 @@ import "./_env";
  *   npm run cron:daily     job-feed sync, listing expiry, job alerts and housekeeping
  *   npm run jobs:sync      synchronise every enabled job source now, ignoring schedules
  *   npm run news:sync      refresh the security news desk now
+ *   npm run social:post    post the next card to Instagram now (add --dry to preview, --force to ignore the daily pace)
  */
 async function main() {
   const mode = process.argv[2] ?? "daily";
@@ -43,7 +44,23 @@ async function main() {
     return;
   }
 
-  if (mode !== "daily") throw new Error(`Unknown mode "${mode}". Use "daily", "sync" or "news".`);
+  if (mode === "social") {
+    const { runInstagramPosting } = await import("../src/server/services/social-poster");
+    const report = await runInstagramPosting({ dryRun: process.argv.includes("--dry"), force: process.argv.includes("--force") });
+    if (report.status === "dry-run") console.log(`Would post ${report.key}:
+
+${report.caption}
+
+${JSON.stringify(report.payload, null, 2)}`);
+    else if (report.status === "published") console.log(`✓ Published ${report.key} to Instagram (media ${report.externalId}).`);
+    else if (report.status === "failed") console.error(`✗ ${report.key}: ${report.error}`);
+    else console.log(`Nothing posted: ${report.reason}.`);
+    await closeDb();
+    if (report.status === "failed") process.exit(1);
+    return;
+  }
+
+  if (mode !== "daily") throw new Error(`Unknown mode "${mode}". Use "daily", "sync", "news" or "social".`);
   const { runScheduledWork } = await import("../src/server/services/scheduled-work");
   const report = await runScheduledWork("schedule");
   console.log(

@@ -1,8 +1,10 @@
 import "server-only";
 import { purgeExpiredSessions } from "@/lib/auth/session";
+import { env } from "@/lib/env";
 import { purgeExpiredAuthTokens } from "./accounts";
 import { expireStaleJobs, runJobAlerts, syncDueSources, type SyncReport } from "./job-sync";
 import { syncNewsIfDue } from "./news-sync";
+import { runInstagramPosting } from "./social-poster";
 
 export type ScheduledWorkReport = {
   startedAt: string;
@@ -10,6 +12,8 @@ export type ScheduledWorkReport = {
   sync: SyncReport[];
   /** Headlines added to the news desk on this run (0 when it was not due). */
   newsAdded: number;
+  /** What the Instagram poster did on this run: "published", "failed" or why it skipped. */
+  instagram: string;
   expiredJobs: number;
   alertsSent: number;
   sessionsPurged: number;
@@ -36,6 +40,8 @@ export async function runScheduledWork(trigger: "schedule" | "manual"): Promise<
   };
 
   const news = await step("news desk", null, syncNewsIfDue);
+  // After the news desk, so a fresh headline can be picked up on the same run.
+  const instagram = await step("instagram", null, () => (env.instagram ? runInstagramPosting() : Promise.resolve(null)));
   const sync = await step("job sync", [] as SyncReport[], () => syncDueSources(trigger));
   const expiredJobs = await step("job expiry", 0, expireStaleJobs);
   const alertsSent = await step("job alerts", 0, runJobAlerts);
@@ -47,6 +53,7 @@ export async function runScheduledWork(trigger: "schedule" | "manual"): Promise<
     finishedAt: new Date().toISOString(),
     sync,
     newsAdded: news?.added ?? 0,
+    instagram: instagram ? (instagram.status === "skipped" ? `skipped: ${instagram.reason}` : instagram.status) : "off",
     expiredJobs,
     alertsSent,
     sessionsPurged,

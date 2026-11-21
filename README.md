@@ -86,6 +86,24 @@ The home page is the feed. Visitors see security headlines, public community pos
 
 Security news appears in the feed as ordinary posts from a platform-run account, CyberGram News, so members can like, comment on, repost and share a headline like any other post. Headlines come from a fixed list of established sources in `src/lib/news/sources.ts` — a national cyber agency, security research teams and long-running security press. Only the headline and a short excerpt are stored; each post names its source and does not link out. The built-in scheduler collects new headlines every 30 minutes; `npm run news:sync` does it on demand.
 
+## Instagram auto-posting
+
+CyberGram can post to your cyber Instagram account on its own: a branded 4:5 card for the best unposted security headline (national agency and research write-ups first, then the press), at most `INSTAGRAM_POSTS_PER_DAY` times a day (default 3), plus one "open roles" digest card a day from `INSTAGRAM_JOBS_HOUR_UTC` onward. Cards are drawn by the app (`/api/social/card/<id>`), the caption credits the source by name, and every post is recorded in `outbound_posts` so nothing is posted twice. It runs on the same scheduler as the news desk and is off until you connect an account.
+
+It uses Meta's official API, so the account must be a **Professional** account (Business or Creator, free to switch in Instagram → Settings → Account type). A personal account cannot be posted to automatically by any official route, and this project does not log in with passwords or scrape.
+
+1. Go to [developers.facebook.com](https://developers.facebook.com), create an app (type "Business"), and add the **Instagram** product → *API setup with Instagram login*.
+2. Add your Instagram account as a tester/role and, under *Generate access tokens*, generate a token for it with the `instagram_business_basic` and `instagram_business_content_publish` permissions. Copy the token and the Instagram user ID shown next to it.
+3. In Render → Environment add `INSTAGRAM_USER_ID` and `INSTAGRAM_ACCESS_TOKEN`, then redeploy. `APP_URL` must be the public https address (Instagram downloads the card from it).
+4. Preview what would be posted, then post one now:
+
+```bash
+npm run social:post -- --dry     # prints the next caption and card data, posts nothing
+npm run social:post -- --force   # posts the next card immediately, ignoring the daily pace
+```
+
+The token lasts 60 days; the app renews it automatically (the renewed value is stored encrypted in the database), so you only paste it once. If three posts in a row fail, posting pauses for six hours — check `outbound_posts.error`. While the app is in development mode in Meta's dashboard it can post only to accounts that have a role on the app, which is all you need for your own handle.
+
 ## Messaging
 
 Following is one-way and needs no approval. A direct message can only be started with someone who has accepted your connection request (the exceptions are platform staff, and a hiring team replying to someone who applied to one of its roles). Members can also close their inbox entirely in Settings → Privacy.

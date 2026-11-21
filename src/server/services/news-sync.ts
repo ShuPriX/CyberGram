@@ -67,7 +67,7 @@ const DOMAIN_RULES: [RegExp, string][] = [
   [/\b(router|firewall|vpn|dns|ddos|network\w*)\b/i, "networking"],
 ];
 
-const domainOf = (text: string) => DOMAIN_RULES.find(([pattern]) => pattern.test(text))?.[1] ?? "general";
+export const domainOf = (text: string) => DOMAIN_RULES.find(([pattern]) => pattern.test(text))?.[1] ?? "general";
 
 /** Publishes stored headlines that have not been posted yet as posts from the news account. */
 async function publishPending(): Promise<number> {

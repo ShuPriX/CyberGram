@@ -57,6 +57,12 @@ services:
       - key: GOOGLE_CLIENT_SECRET
         sync: false
 
+      # Auto-post to your Instagram account (Professional account; see README → Instagram).
+      - key: INSTAGRAM_USER_ID
+        sync: false
+      - key: INSTAGRAM_ACCESS_TOKEN
+        sync: false
+
       # Add these in the dashboard when you are ready (see the README):
       #   APP_URL                 https://your-domain  (once the custom domain is live)
       #   SMTP_URL, EMAIL_FROM    so verification and password-reset emails are delivered
